@@ -16,6 +16,14 @@ html, body{
     background-color: #3e3e3e;
 }
 
+.fileContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-inline: 0.8rem;
+}
+
 .content{
     display: flex;
     flex-direction: column;
@@ -92,7 +100,7 @@ input{
 p{
     color: #fff;
     font-size: 1rem;
-    margin-top: 0;
+    margin: 0;
 }
 
 #names{
@@ -111,9 +119,8 @@ p{
 }
 
 .inputFile{
-    padding: 0.5rem;
+    padding: 0.3rem;
     border: 2px solid rgb(99, 99, 99);
-    margin: 0.5rem 0.5rem;
     font-size: 1rem;
     background-color: rgb(174, 174, 174);
     color: black;

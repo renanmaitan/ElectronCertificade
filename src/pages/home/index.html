@@ -18,10 +18,16 @@
             <div class="group">
                 <button class="btn" id="btnList">Ver lista</button>
                 <button class="btn" id="btnClear">Limpar lista</button>
-                <label for="wordTemplate" class="inputFile">Escolha o modelo WORD</label>
-                <input type="file" class="hidden" id="wordTemplate" accept=".docx">
-                <label for="pptxTemplate" class="inputFile">Escolha o modelo PPTX</label>
-                <input type="file" class="hidden" id="pptxTemplate" accept=".pptx">
+                <div class="fileContainer">
+                    <p>Modelo word</p>
+                    <label for="wordTemplate" class="inputFile" id="wordLabel"></label>
+                    <input type="file" class="hidden" id="wordTemplate" accept=".docx">
+                </div>
+                <div class="fileContainer">
+                    <p>Modelo powerpoint</p>
+                    <label for="pptxTemplate" class="inputFile" id="pptxLabel"></label>
+                    <input type="file" class="hidden" id="pptxTemplate" accept=".pptx">
+                </div>
             </div>
             <div class="group" style="height: 60%;">
                 <div class="content" style="width: 40%;">
@@ -36,7 +42,7 @@
                 </div>
                 <div class="content" style="width: 60%;">
                     <h2>Adicionar vários itens</h2>
-                    <p>*Modelo: Nome CPF DD/MM/AAAA<br>*Exemplo: João da Silva 12345678910 01/01/2000<br>*Separe os
+                    <p>*Modelo: Nome CPF DD/MM/AAAA<br>*Exemplo: João da Silva 123.456.789-10 01/01/2000<br>*Separe os
                         itens por quebra de linha (ENTER)</p>
                     <textarea id="names" placeholder="Nomes"></textarea>
                     <button class="btn" id="btnAddMany">Adicionar</button>
@@ -44,6 +50,7 @@
             </div>
         </div>
     </div>
+    <script src="./index.js"></script>
 </body>
 
 </html>
