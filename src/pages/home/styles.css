@@ -1,0 +1,125 @@
+html, body{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+*{
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+.container{
+    height: 100%;
+    width: 100%;
+    background-color: #3e3e3e;
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+}
+
+.group{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.title{
+    color: #fff;
+    font-size: 2rem;
+}
+
+.btn{
+    background-color: #2d2226;
+    color: #fff;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 0 0.5rem;
+}
+
+.btn#btnWord{
+    background-color: cornflowerblue;
+}
+
+.btn#btnPPTX{
+    background-color: orangered;
+}
+
+.btn:hover{
+    background-color:darkgreen;
+    color: #fff;
+}
+
+.btn#btnWord:hover {
+    background-color: darkgreen;
+}
+
+.btn#btnPPTX:hover {
+    background-color: darkgreen;
+}
+
+h2{
+    color: #fff;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+label{
+    color: #fff;
+    font-size: 1rem;
+}
+
+input{
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #fff;
+    margin: 0.5rem 0;
+    width: 80%;
+    font-size: 1rem;
+}
+
+p{
+    color: #fff;
+    font-size: 1rem;
+    margin-top: 0;
+}
+
+#names{
+    width: 80%;
+    height: 100%;
+    margin-bottom: 1rem;
+}
+
+#names:focus{
+    outline: none;
+    border: 2px solid cornflowerblue;
+}
+
+.hidden{
+    display: none;
+}
+
+.inputFile{
+    padding: 0.5rem;
+    border: 2px solid rgb(99, 99, 99);
+    margin: 0.5rem 0.5rem;
+    font-size: 1rem;
+    background-color: rgb(174, 174, 174);
+    color: black;
+    cursor: pointer;
+}
+
+.inputFile:hover{
+    background-color: rgb(148, 228, 255);
+}
