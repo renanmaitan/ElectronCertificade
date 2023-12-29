@@ -99,8 +99,9 @@ input{
 
 p{
     color: #fff;
-    font-size: 1rem;
+    font-size: 0.8rem;
     margin: 0;
+    margin-bottom: 1rem;
 }
 
 #names{

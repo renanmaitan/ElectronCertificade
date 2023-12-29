@@ -8,7 +8,7 @@ let mainWindow = null;
 
 async function createListWindow() {
     const listWindow = new BrowserWindow({
-        width: 700,
+        width: 900,
         height: 500,
         webPreferences: {
             nodeIntegration: true, // enable node integration
