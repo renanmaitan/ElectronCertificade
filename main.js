@@ -1,61 +1,24 @@
 const { app, BrowserWindow, Menu, ipcMain } = require('electron');
-const fs = require('fs');
-const path = require('path');
+
+const { loadFiles, rewriteFile } = require('./src/utils/fileOperations');
+const { addToList, removeItensFromList, updateItemFromList, clearList, addFromPaste } = require('./src/utils/listOperations');
 
 // main window
 let mainWindow = null;
 
-// load files
-function loadFiles(){
-    const wordTemplateFolder = path.join(__dirname, 'wordTemplate');
-    if (!fs.existsSync(wordTemplateFolder)) {
-        fs.mkdirSync(wordTemplateFolder);
-    }
-    const wordFiles = fs.readdirSync(wordTemplateFolder);
-    const docxFiles = wordFiles.filter(file => path.extname(file).toLowerCase() === '.docx');
-    if (docxFiles.length === 1) {
-        const docxFile = docxFiles[0];
-        const docxFilePath = path.join(wordTemplateFolder, docxFile);
-        mainWindow.webContents.send('wordTemplate', docxFilePath);
-    } else if (docxFiles.length > 1) {
-        docxFiles.forEach(docxFile => {
-            const docxFilePath = path.join(wordTemplateFolder, docxFile);
-            fs.unlinkSync(docxFilePath);
-        });
-    } else {
-        mainWindow.webContents.send('wordTemplate', '');
-    }
-
-    const pptxTemplateFolder = path.join(__dirname, 'pptxTemplate');
-    if (!fs.existsSync(pptxTemplateFolder)) {
-        fs.mkdirSync(pptxTemplateFolder);
-    }
-    const pptFiles = fs.readdirSync(pptxTemplateFolder);
-    const pptxFiles = pptFiles.filter(file => path.extname(file).toLowerCase() === '.pptx');
-    if (pptxFiles.length === 1) {
-        const pptxFile = pptxFiles[0];
-        const pptxFilePath = path.join(pptxTemplateFolder, pptxFile);
-        mainWindow.webContents.send('pptxTemplate', pptxFilePath);
-    } else if (pptxFiles.length > 1) {
-        pptxFiles.forEach(pptxFile => {
-            const pptxFilePath = path.join(pptxTemplateFolder, pptxFile);
-            fs.unlinkSync(pptxFilePath);
-        });
-    } else {
-        mainWindow.webContents.send('pptxTemplate', '');
-    }
-}
-
-function rewriteFile(filePath, folderTargetName) {
-    const folderTarget = path.join(__dirname, folderTargetName);
-    const filesInFolder = fs.readdirSync(folderTarget);
-    filesInFolder.forEach(file => {
-        const filePathTarget = path.join(folderTarget, file);
-        fs.unlinkSync(filePathTarget);
+async function createListWindow() {
+    const listWindow = new BrowserWindow({
+        width: 700,
+        height: 500,
+        webPreferences: {
+            nodeIntegration: true, // enable node integration
+            contextIsolation: false, // enable ipcRenderer
+            enableRemoteModule: true // enable remote
+        }
     });
-    fs.copyFileSync(filePath, path.join(folderTarget, path.basename(filePath)));
-    mainWindow.webContents.send(folderTargetName, filePath);
+    await listWindow.loadFile('src/pages/list/index.html');
 }
+
 
 async function createWindow() {
     mainWindow = new BrowserWindow({
@@ -68,14 +31,44 @@ async function createWindow() {
         }
     });
     await mainWindow.loadFile('src/pages/home/index.html');
-    loadFiles()
+    loadFiles(mainWindow);
 
     ipcMain.on('wordTemplate', (event, message) => {
-        rewriteFile(message, 'wordTemplate');
+        rewriteFile(message, 'wordTemplate', mainWindow);
     });
 
     ipcMain.on('pptxTemplate', (event, message) => {
-        rewriteFile(message, 'pptxTemplate');
+        rewriteFile(message, 'pptxTemplate', mainWindow);
+    });
+
+    ipcMain.on('createListWindow', (event, message) => {
+        createListWindow();
+    });
+
+    ipcMain.on('addToList', (event, message) => {
+        const result = addToList(message.name, message.cpf, message.birthDate);
+        event.returnValue = result;
+    });
+
+    ipcMain.on('getList', (event, message) => {
+        event.returnValue = getList();
+    });
+
+    ipcMain.on('clearList', (event, message) => {
+        clearList();
+    });
+
+    ipcMain.on('removeItensFromList', (event, message) => {
+        removeItensFromList(message);
+    });
+
+    ipcMain.on('updateItemFromList', (event, message) => {
+        updateItemFromList(message.item, message.name, message.cpf, message.birthDate);
+    });
+
+    ipcMain.on('addFromPaste', (event, message) => {
+        const result = addFromPaste(message);
+        event.returnValue = result;
     });
 }
 

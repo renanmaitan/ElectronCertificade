@@ -5,6 +5,8 @@ const wordTemplateFile = document.getElementById('wordTemplate');
 const pptxTemplateFile = document.getElementById('pptxTemplate');
 const wordLabel = document.getElementById('wordLabel');
 const pptxLabel = document.getElementById('pptxLabel');
+const btnList = document.getElementById('btnList');
+const btnClear = document.getElementById('btnClear');
 
 
 function handleChangeWordTemplate(path) {
@@ -21,6 +23,12 @@ wordTemplateFile.addEventListener('change', (event) => {
 });
 pptxTemplateFile.addEventListener('change', (event) => {
     handleChangePptxTemplate(event.target.files[0].path);
+});
+btnList.addEventListener('click', () => {
+    ipcRenderer.send('createListWindow');
+});
+btnClear.addEventListener('click', () => {
+    ipcRenderer.send('clearList');
 });
 
 ipcRenderer.on('test', (event, message) => {
