@@ -1,0 +1,7 @@
+{
+    "ignore":[
+        "template/**/*",
+        "output/**/*"
+    ],
+    "ext": "js, html, css, scss, less"
+}
