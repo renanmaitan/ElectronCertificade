@@ -7,7 +7,9 @@ function ensureDirectoryExists(directory) {
     }
 }
 
-function loadFiles(mainWindow){
+function loadFiles(mainWindow) {
+    let response = [];
+
     const wordTemplateFolder = path.join(__dirname, '..', '..', 'templates', 'wordTemplate');
     ensureDirectoryExists(wordTemplateFolder);
     const wordFiles = fs.readdirSync(wordTemplateFolder);
@@ -41,6 +43,27 @@ function loadFiles(mainWindow){
     } else {
         mainWindow.webContents.send('pptxTemplate', '');
     }
+
+    //load a txt file tha contains the template for the file name, like: Certificado - {name} and send the content
+    const fileNameTemplateFolder = path.join(__dirname, '..', '..', 'templates', 'fileNameTemplate');
+    ensureDirectoryExists(fileNameTemplateFolder);
+    const fileNameFiles = fs.readdirSync(fileNameTemplateFolder);
+    const fileNameTxtFiles = fileNameFiles.filter(file => path.extname(file).toLowerCase() === '.txt');
+    if (fileNameTxtFiles.length === 1) {
+        const fileNameTxtFile = fileNameTxtFiles[0];
+        const fileNameTxtFilePath = path.join(fileNameTemplateFolder, fileNameTxtFile);
+        const fileNameTxtFileContent = fs.readFileSync(fileNameTxtFilePath, 'utf8');
+        mainWindow.webContents.send('fileNameTemplate', fileNameTxtFileContent);
+        response.push(fileNameTxtFileContent);
+    } else if (fileNameTxtFiles.length > 1) {
+        fileNameTxtFiles.forEach(fileNameTxtFile => {
+            const fileNameTxtFilePath = path.join(fileNameTemplateFolder, fileNameTxtFile);
+            fs.unlinkSync(fileNameTxtFilePath);
+        });
+    } else {
+        mainWindow.webContents.send('fileNameTemplate', '');
+    }
+    return response;
 }
 
 function rewriteFile(filePath, folderTargetName, mainWindow) {

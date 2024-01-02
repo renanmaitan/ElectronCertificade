@@ -4,12 +4,15 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dev": "nodemon --exec electron ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "electron": "^28.1.0"
+    "docxtemplater": "^3.42.7",
+    "electron": "^28.1.0",
+    "pizzip": "^3.1.4"
   }
 }

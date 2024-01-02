@@ -2,6 +2,8 @@ const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 
 const { loadFiles, rewriteFile } = require('./src/utils/fileOperations');
 const { addToList, removeItensFromList, updateItemFromList, clearList, addFromPaste } = require('./src/utils/listOperations');
+const createPPTX = require('./src/utils/pptxCreate');
+const createDocx = require('./src/utils/docxCreate');
 
 // main window
 let mainWindow = null;
@@ -31,7 +33,7 @@ async function createWindow() {
         }
     });
     await mainWindow.loadFile('src/pages/home/index.html');
-    loadFiles(mainWindow);
+    console.log(loadFiles(mainWindow));
 
     ipcMain.on('wordTemplate', (event, message) => {
         rewriteFile(message, 'wordTemplate', mainWindow);
@@ -70,6 +72,17 @@ async function createWindow() {
         const result = addFromPaste(message);
         event.returnValue = result;
     });
+
+    ipcMain.on('createPPTX', (event, message) => {
+        createPPTX(message.name, message.cpf);
+    });
+
+    ipcMain.on('createDocx', (event, message) => {
+        createDocx(message.name, message.cpf);
+    });
+
+    //test
+    createDocx('Renan Antonioli Maitan', '123.456.789-03', 'Certificado - {nome}');
 }
 
 // menu
