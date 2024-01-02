@@ -20,6 +20,8 @@ const alert = document.getElementById('alert');
 const names = document.getElementById('names');
 const btnAddMany = document.getElementById('btnAddMany');
 const alertMany = document.getElementById('alertMany');
+const btnWord = document.getElementById('btnWord');
+const btnPptx = document.getElementById('btnPptx');
 
 //MAKS INPUTS
 cpfInput.addEventListener('blur', () => {
@@ -52,6 +54,9 @@ function handleChangePptxTemplate(path) {
 }
 
 //EVENTS
+btnWord.addEventListener('click', () => {
+    ipcRenderer.send('createDocx');
+});
 wordTemplateFile.addEventListener('change', (event) => {
     handleChangeWordTemplate(event.target.files[0].path);
 });

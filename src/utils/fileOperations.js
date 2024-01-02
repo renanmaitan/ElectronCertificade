@@ -7,8 +7,13 @@ function ensureDirectoryExists(directory) {
     }
 }
 
+function getTemplateName () {
+    const fileNameTemplateFolder = path.join(__dirname, '..', '..', 'templates', 'fileNameTemplate', 'fileNameTemplate.txt');
+    const fileNameTemplate = fs.readFileSync(fileNameTemplateFolder, 'utf8');
+    return fileNameTemplate;
+}
+
 function loadFiles(mainWindow) {
-    //let response = [];
     const wordTemplateFolder = path.join(__dirname, '..', '..', 'templates', 'wordTemplate');
     ensureDirectoryExists(wordTemplateFolder);
     const wordFiles = fs.readdirSync(wordTemplateFolder);
@@ -63,7 +68,6 @@ function loadFiles(mainWindow) {
         createFile('fileNameTemplate.txt', defaultFileName, 'fileNameTemplate');
         mainWindow.webContents.send('fileNameTemplate', defaultFileName);
     }
-    //return response;
 }
 
 function rewriteFile(filePath, folderTargetName, mainWindow) {
@@ -86,4 +90,4 @@ function createFile(fileName, fileContent, folderTargetName) {
 }
 
 
-module.exports = { loadFiles, rewriteFile, createFile };
+module.exports = { loadFiles, rewriteFile, createFile, getTemplateName };

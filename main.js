@@ -1,6 +1,6 @@
 const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 
-const { loadFiles, rewriteFile, createFile } = require('./src/utils/fileOperations');
+const { loadFiles, rewriteFile, createFile, getTemplateName } = require('./src/utils/fileOperations');
 const { addToList, removeItemsFromList, updateItemFromList, clearList, addFromPaste, getList } = require('./src/utils/listOperations');
 const createPPTX = require('./src/utils/pptxCreate');
 const createDocx = require('./src/utils/docxCreate');
@@ -79,7 +79,12 @@ async function createWindow() {
     });
 
     ipcMain.on('createDocx', (event, message) => {
-        createDocx(message.name, message.cpf);
+        //todos os itens da lista
+        const templateName = getTemplateName();
+        const list = getList();
+        list.forEach(item => {
+            createDocx(item.name, item.cpf, templateName);
+        });
     });
 
     ipcMain.on('fileNameTemplate', (event, message) => {
