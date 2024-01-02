@@ -1,7 +1,7 @@
 const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 
 const { loadFiles, rewriteFile, createFile } = require('./src/utils/fileOperations');
-const { addToList, removeItensFromList, updateItemFromList, clearList, addFromPaste } = require('./src/utils/listOperations');
+const { addToList, removeItemsFromList, updateItemFromList, clearList, addFromPaste, getList } = require('./src/utils/listOperations');
 const createPPTX = require('./src/utils/pptxCreate');
 const createDocx = require('./src/utils/docxCreate');
 
@@ -33,7 +33,8 @@ async function createWindow() {
         }
     });
     await mainWindow.loadFile('src/pages/home/index.html');
-    console.log(loadFiles(mainWindow));
+    loadFiles(mainWindow);
+    //mainWindow.webContents.openDevTools();
 
     ipcMain.on('wordTemplate', (event, message) => {
         rewriteFile(message, 'wordTemplate', mainWindow);
@@ -53,15 +54,15 @@ async function createWindow() {
     });
 
     ipcMain.on('getList', (event, message) => {
-        event.returnValue = getList();
+        const result = getList();
+        event.reply('getListResponse', result);
     });
-
     ipcMain.on('clearList', (event, message) => {
         clearList();
     });
 
-    ipcMain.on('removeItensFromList', (event, message) => {
-        removeItensFromList(message);
+    ipcMain.on('removeItemsFromList', (event, message) => {
+        removeItemsFromList(message);
     });
 
     ipcMain.on('updateItemFromList', (event, message) => {
@@ -85,9 +86,6 @@ async function createWindow() {
         createFile('fileNameTemplate.txt', message, 'fileNameTemplate');
         mainWindow.webContents.send('fileNameTemplate', message);
     });
-
-    //test
-    createDocx('Renan Antonioli Maitan', '123.456.789-03', 'Certificado - {nome}');
 }
 
 // menu

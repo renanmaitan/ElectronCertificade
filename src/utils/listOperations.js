@@ -20,10 +20,18 @@ function getList() {
 function clearList() {
     list = [];
 }
-
-function removeItensFromList(itens) {
-    itens.forEach(item => {
-        const index = list.indexOf(item);
+function removeItemsFromList(items) {
+    if (!Array.isArray(items)) {
+        items = [items];
+    }
+    items.forEach(itemToRemove => {
+        const index = list.findIndex(item => {
+            return (
+                item.name === itemToRemove.name &&
+                item.cpf === itemToRemove.cpf &&
+                item.birthDate === itemToRemove.birthDate
+            );
+        });
         if (index > -1) {
             list.splice(index, 1);
         }
@@ -41,21 +49,22 @@ function updateItemFromList(item, name, cpf, birthDate) {
 
 function addFromPaste(pastedText) {
     const lines = pastedText.split('\n');
+    const tempList = [];
     for (const line of lines) {
-        const trimmedLine = line.trim().replace(/ {2,}/g, ' '); 
+        const trimmedLine = line.trim();
         if (trimmedLine) {
-            const parts = trimmedLine.split(' ');
-            if (parts.length !== 3) {
-                return 400;
-            }
-            
+            const parts = trimmedLine.split(' ').filter(part => part.trim() !== '');
             const birthDate = parts.pop();
             const cpf = parts.pop();
             const name = parts.join(' ');
-
-            list.push({ "name": name, "cpf": cpf, "birthDate": birthDate });
+            if (!name || !cpf || !birthDate) {
+                return 400;
+            }
+            tempList.push({ name, cpf, birthDate });
         }
     }
+    list.push(...tempList);
+    return 200;
 }
 
-module.exports = { addToList, getList, clearList, removeItensFromList, updateItemFromList, addFromPaste };
+module.exports = { addToList, getList, clearList, removeItemsFromList, updateItemFromList, addFromPaste };

@@ -10,7 +10,38 @@ const fileNameLabel = document.getElementById('fileNameLabel');
 const btnList = document.getElementById('btnList');
 const btnClear = document.getElementById('btnClear');
 const btnFileName = document.getElementById('btnFileName');
+const birthDateInput = document.getElementById('birthdate');
+const cpfInput = document.getElementById('cpf');
+const btnAdd = document.getElementById('btnAdd');
+const name = document.getElementById('name');
+const cpf = document.getElementById('cpf');
+const birthdate = document.getElementById('birthdate');
+const alert = document.getElementById('alert');
+const names = document.getElementById('names');
+const btnAddMany = document.getElementById('btnAddMany');
+const alertMany = document.getElementById('alertMany');
 
+//MAKS INPUTS
+cpfInput.addEventListener('blur', () => {
+    cpfInput.maxLength = 14;
+    cpfInput.value = cpfInput.value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+});
+birthDateInput.addEventListener('blur', () => {
+    birthDateInput.maxLength = 10;
+    birthDateInput.value = birthDateInput.value.replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
+});
+cpfInput.addEventListener('input', () => {
+    cpfInput.value = cpfInput.value.replace(/\D/g, '');
+});
+birthDateInput.addEventListener('input', () => {
+    birthDateInput.value = birthDateInput.value.replace(/\D/g, '');
+});
+cpfInput.addEventListener('focus', () => {
+    cpfInput.maxLength = 11;
+});
+birthDateInput.addEventListener('focus', () => {
+    birthDateInput.maxLength = 8;
+});
 
 function handleChangeWordTemplate(path) {
     ipcRenderer.send('wordTemplate', path);
@@ -19,7 +50,6 @@ function handleChangeWordTemplate(path) {
 function handleChangePptxTemplate(path) {
     ipcRenderer.send('pptxTemplate', path);
 }
-
 
 //EVENTS
 wordTemplateFile.addEventListener('change', (event) => {
@@ -37,6 +67,28 @@ btnClear.addEventListener('click', () => {
 btnFileName.addEventListener('click', () => {
     ipcRenderer.send('fileNameTemplate', fileNameInput.value);
     fileNameInput.value = '';
+});
+btnAdd.addEventListener('click', () => {
+    const result = ipcRenderer.sendSync('addToList', { name: name.value, cpf: cpf.value, birthDate: birthdate.value });
+    if (result) {
+        name.value = '';
+        cpf.value = '';
+        birthdate.value = '';
+        alert.classList.add('hidden');
+    }
+    else {
+        alert.classList.remove('hidden');
+    }
+});
+btnAddMany.addEventListener('click', () => {
+    const result = ipcRenderer.sendSync('addFromPaste', names.value);
+    if (result === 400) {
+        alertMany.classList.remove('hidden');
+    }
+    else {
+        names.value = '';
+        alertMany.classList.add('hidden');
+    }
 });
 
 ipcRenderer.on('fileNameTemplate', (event, message) => {
