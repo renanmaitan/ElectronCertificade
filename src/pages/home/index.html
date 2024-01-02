@@ -16,17 +16,23 @@
                 <button class="btn" id="btnPPTX">Gerar certificado PPTX</button>
             </div>
             <div class="group">
-                <button class="btn" id="btnList">Ver lista</button>
-                <button class="btn" id="btnClear">Limpar lista</button>
+                <button class="btn" id="btnList" style="height: 40%;">Ver lista</button>
+                <button class="btn" id="btnClear" style="height: 40%;">Limpar lista</button>
                 <div class="fileContainer">
-                    <p>Modelo word</p>
+                    <p style="margin-bottom: 6%;">Modelo word</p>
                     <label for="wordTemplate" class="inputFile" id="wordLabel"></label>
                     <input type="file" class="hidden" id="wordTemplate" accept=".docx">
                 </div>
                 <div class="fileContainer">
-                    <p>Modelo powerpoint</p>
+                    <p style="margin-bottom: 6%;">Modelo powerpoint</p>
                     <label for="pptxTemplate" class="inputFile" id="pptxLabel"></label>
                     <input type="file" class="hidden" id="pptxTemplate" accept=".pptx">
+                </div>
+                <div class="fileContainer">
+                    <p style="margin: 0;">Modelo de nome do Arquivo<br></p>
+                    <p style="margin: 0;">Modelo atual: <strong id="fileNameLabel" style="color: aqua;"></strong></p>
+                    <input type="text" id="fileNameInput">
+                    <button class="btn" id="btnFileName">Salvar</button>
                 </div>
             </div>
             <div class="group" style="height: 60%;">

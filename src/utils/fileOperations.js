@@ -8,8 +8,7 @@ function ensureDirectoryExists(directory) {
 }
 
 function loadFiles(mainWindow) {
-    let response = [];
-
+    //let response = [];
     const wordTemplateFolder = path.join(__dirname, '..', '..', 'templates', 'wordTemplate');
     ensureDirectoryExists(wordTemplateFolder);
     const wordFiles = fs.readdirSync(wordTemplateFolder);
@@ -44,7 +43,6 @@ function loadFiles(mainWindow) {
         mainWindow.webContents.send('pptxTemplate', '');
     }
 
-    //load a txt file tha contains the template for the file name, like: Certificado - {name} and send the content
     const fileNameTemplateFolder = path.join(__dirname, '..', '..', 'templates', 'fileNameTemplate');
     ensureDirectoryExists(fileNameTemplateFolder);
     const fileNameFiles = fs.readdirSync(fileNameTemplateFolder);
@@ -54,16 +52,18 @@ function loadFiles(mainWindow) {
         const fileNameTxtFilePath = path.join(fileNameTemplateFolder, fileNameTxtFile);
         const fileNameTxtFileContent = fs.readFileSync(fileNameTxtFilePath, 'utf8');
         mainWindow.webContents.send('fileNameTemplate', fileNameTxtFileContent);
-        response.push(fileNameTxtFileContent);
     } else if (fileNameTxtFiles.length > 1) {
         fileNameTxtFiles.forEach(fileNameTxtFile => {
             const fileNameTxtFilePath = path.join(fileNameTemplateFolder, fileNameTxtFile);
             fs.unlinkSync(fileNameTxtFilePath);
         });
     } else {
-        mainWindow.webContents.send('fileNameTemplate', '');
+        // create with the default name (Certificado - {nome})
+        const defaultFileName = 'Certificado - {nome}';
+        createFile('fileNameTemplate.txt', defaultFileName, 'fileNameTemplate');
+        mainWindow.webContents.send('fileNameTemplate', defaultFileName);
     }
-    return response;
+    //return response;
 }
 
 function rewriteFile(filePath, folderTargetName, mainWindow) {
@@ -78,4 +78,12 @@ function rewriteFile(filePath, folderTargetName, mainWindow) {
     mainWindow.webContents.send(folderTargetName, filePath);
 }
 
-module.exports = { loadFiles, rewriteFile };
+function createFile(fileName, fileContent, folderTargetName) {
+    const folderTarget = path.join(__dirname, '..', '..', 'templates', folderTargetName);
+    ensureDirectoryExists(folderTarget);
+    const filePath = path.join(folderTarget, fileName);
+    fs.writeFileSync(filePath, fileContent);
+}
+
+
+module.exports = { loadFiles, rewriteFile, createFile };

@@ -3,10 +3,13 @@ const { ipcRenderer } = require('electron');
 //ELEMENTS
 const wordTemplateFile = document.getElementById('wordTemplate');
 const pptxTemplateFile = document.getElementById('pptxTemplate');
+const fileNameInput = document.getElementById('fileNameInput');
 const wordLabel = document.getElementById('wordLabel');
 const pptxLabel = document.getElementById('pptxLabel');
+const fileNameLabel = document.getElementById('fileNameLabel');
 const btnList = document.getElementById('btnList');
 const btnClear = document.getElementById('btnClear');
+const btnFileName = document.getElementById('btnFileName');
 
 
 function handleChangeWordTemplate(path) {
@@ -16,6 +19,7 @@ function handleChangeWordTemplate(path) {
 function handleChangePptxTemplate(path) {
     ipcRenderer.send('pptxTemplate', path);
 }
+
 
 //EVENTS
 wordTemplateFile.addEventListener('change', (event) => {
@@ -30,9 +34,15 @@ btnList.addEventListener('click', () => {
 btnClear.addEventListener('click', () => {
     ipcRenderer.send('clearList');
 });
+btnFileName.addEventListener('click', () => {
+    ipcRenderer.send('fileNameTemplate', fileNameInput.value);
+    fileNameInput.value = '';
+});
 
-ipcRenderer.on('test', (event, message) => {
-    console.log(message);
+ipcRenderer.on('fileNameTemplate', (event, message) => {
+    if (message !== '') {
+        fileNameLabel.innerHTML = message;
+    }
 });
 
 ipcRenderer.on('wordTemplate', (event, message) => {

@@ -1,6 +1,6 @@
 const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 
-const { loadFiles, rewriteFile } = require('./src/utils/fileOperations');
+const { loadFiles, rewriteFile, createFile } = require('./src/utils/fileOperations');
 const { addToList, removeItensFromList, updateItemFromList, clearList, addFromPaste } = require('./src/utils/listOperations');
 const createPPTX = require('./src/utils/pptxCreate');
 const createDocx = require('./src/utils/docxCreate');
@@ -24,8 +24,8 @@ async function createListWindow() {
 
 async function createWindow() {
     mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 850,
+        height: 700,
         webPreferences: {
             nodeIntegration: true, // enable node integration
             contextIsolation: false, // enable ipcRenderer
@@ -79,6 +79,11 @@ async function createWindow() {
 
     ipcMain.on('createDocx', (event, message) => {
         createDocx(message.name, message.cpf);
+    });
+
+    ipcMain.on('fileNameTemplate', (event, message) => {
+        createFile('fileNameTemplate.txt', message, 'fileNameTemplate');
+        mainWindow.webContents.send('fileNameTemplate', message);
     });
 
     //test
