@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron');
 
 const { loadFiles, rewriteFile, createFile, getTemplateName } = require('./src/utils/fileOperations');
 const { addToList, removeItemsFromList, updateItemFromList, clearList, addFromPaste, getList } = require('./src/utils/listOperations');
@@ -82,6 +82,15 @@ async function createWindow() {
     ipcMain.on('createDocx', (event, message) => {
         const templateName = getTemplateName();
         const list = getList();
+        if (!list.length) {
+            dialog.showMessageBox(mainWindow, {
+                title: 'Alerta',
+                type: 'warning',
+                message: 'Nenhum certificado gerado! A lista está vazia.',
+                buttons: ['OK']
+            });
+            return;
+        }
         list.forEach(item => {
             const docxPath = createDocx(item.name, item.cpf, templateName);
             const pdfPath = `../../output/pdfOutputs/fromWord/${item.name}.pdf`;

@@ -58,13 +58,19 @@ function addFromPaste(pastedText) {
             const cpf = parts.pop();
             const name = parts.join(' ');
             if (!name || !cpf || !birthDate) {
-                return 400;
+                return {
+                    status: 400,
+                    message: 'Erro de formatação na linha: ' + line
+                }
             }
             tempList.push({ name, cpf, birthDate });
         }
     }
     list.push(...tempList);
-    return 200;
+    return {
+        status: 200,
+        message: 'Lista adicionada com sucesso'
+    }
 }
 
 module.exports = { addToList, getList, clearList, removeItemsFromList, updateItemFromList, addFromPaste };

@@ -61,8 +61,8 @@ html, body{
     background-color: cornflowerblue;
 }
 
-.btn#btnPPTX{
-    background-color: orangered;
+.btn#btnPptx{
+    background-color:rgb(193, 61, 61);
 }
 
 .btn:hover{
@@ -74,7 +74,7 @@ html, body{
     background-color: darkgreen;
 }
 
-.btn#btnPPTX:hover {
+.btn#btnPptx:hover {
     background-color: darkgreen;
 }
 

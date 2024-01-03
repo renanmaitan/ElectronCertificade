@@ -87,12 +87,13 @@ btnAdd.addEventListener('click', () => {
 });
 btnAddMany.addEventListener('click', () => {
     const result = ipcRenderer.sendSync('addFromPaste', names.value);
-    if (result === 400) {
-        alertMany.classList.remove('hidden');
-    }
-    else {
+    if (result.status === 200) {
         names.value = '';
         alertMany.classList.add('hidden');
+    }
+    else {
+        alertMany.classList.remove('hidden');
+        alertMany.innerHTML = '*'+result.message;
     }
 });
 
