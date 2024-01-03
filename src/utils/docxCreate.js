@@ -6,6 +6,15 @@ const Docxtemplater = require("docxtemplater");
 const fs = require("fs");
 const path = require("path");
 
+function ensureRecursiveDirectoryExistence(filePath) {
+    const dirname = path.dirname(filePath);
+    if (fs.existsSync(dirname)) {
+        return;
+    }
+    ensureRecursiveDirectoryExistence(dirname);
+    fs.mkdirSync(dirname, { recursive: true });
+}
+
 const createDocx = (name, cpf, fileName) => {
     // Load the docx file as binary content
     const folderPath = path.resolve(__dirname, "../../templates/wordTemplate");
@@ -43,7 +52,9 @@ const createDocx = (name, cpf, fileName) => {
     // file or res.send it with express for example.
     const handledFileName = fileName.replace('{nome}', name).replace('{cpf}', cpf);
     const outPutPath = `../../output/wordOutputs/${handledFileName}.docx`;
+    ensureRecursiveDirectoryExistence(path.resolve(__dirname, outPutPath));
     fs.writeFileSync(path.resolve(__dirname, outPutPath), buf);
+    return outPutPath;
 }
 
 module.exports = createDocx;

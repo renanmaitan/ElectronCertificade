@@ -1,7 +1,8 @@
 {
     "ignore":[
         "template/**/*",
-        "output/**/*"
+        "output/**/*",
+        "convert/**/*"
     ],
     "ext": "js, html, css, scss, less"
 }

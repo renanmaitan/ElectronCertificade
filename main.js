@@ -4,6 +4,7 @@ const { loadFiles, rewriteFile, createFile, getTemplateName } = require('./src/u
 const { addToList, removeItemsFromList, updateItemFromList, clearList, addFromPaste, getList } = require('./src/utils/listOperations');
 const createPPTX = require('./src/utils/pptxCreate');
 const createDocx = require('./src/utils/docxCreate');
+const convertToPdf = require('./src/utils/convertToPdf');
 
 // main window
 let mainWindow = null;
@@ -79,11 +80,12 @@ async function createWindow() {
     });
 
     ipcMain.on('createDocx', (event, message) => {
-        //todos os itens da lista
         const templateName = getTemplateName();
         const list = getList();
         list.forEach(item => {
-            createDocx(item.name, item.cpf, templateName);
+            const docxPath = createDocx(item.name, item.cpf, templateName);
+            const pdfPath = `../../output/pdfOutputs/fromWord/${item.name}.pdf`;
+            convertToPdf(docxPath, pdfPath, 'docx');
         });
     });
 
