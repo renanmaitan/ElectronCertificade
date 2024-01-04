@@ -24,7 +24,6 @@
   "build": {
     "appId": "com.renanmaitan.electroncertificate",
     "files": [
-      "./convert/**/*",
       "./node_modules/**/*",
       "./src/**/*",
       "./main.js",
@@ -32,6 +31,12 @@
     ],
     "win": {
       "target": "nsis"
-    }
+    },
+    "extraResources": [
+      {
+        "from": "./converter.exe",
+        "to": "./"
+      }
+    ]
   }
 }

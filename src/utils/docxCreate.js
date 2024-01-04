@@ -6,6 +6,11 @@ const Docxtemplater = require("docxtemplater");
 const fs = require("fs");
 const path = require("path");
 
+const { app } = require('electron');
+
+const documentsFolder = app.getPath('documents');
+const appDocsFolder = path.join(documentsFolder, 'ElectronCertificate');
+
 function ensureRecursiveDirectoryExistence(filePath) {
     const dirname = path.dirname(filePath);
     if (fs.existsSync(dirname)) {
@@ -16,11 +21,11 @@ function ensureRecursiveDirectoryExistence(filePath) {
 
 const createDocx = (name, cpf, fileName) => {
     // Load the docx file as binary content
-    const folderPath = path.resolve(__dirname, "../../templates/wordTemplate");
+    const folderPath = path.join(appDocsFolder, "/templates/wordTemplate");
     //get the file tha has any name
     const filePath = fs.readdirSync(folderPath)[0];
     const content = fs.readFileSync(
-        path.resolve(__dirname, `../../templates/wordTemplate/${filePath}`),
+        path.join(appDocsFolder, `/templates/wordTemplate/${filePath}`),
         "binary"
     );
 
@@ -50,9 +55,9 @@ const createDocx = (name, cpf, fileName) => {
     // buf is a nodejs Buffer, you can either write it to a
     // file or res.send it with express for example.
     const handledFileName = fileName.replace('{nome}', name).replace('{cpf}', cpf);
-    const outPutPath = `../../output/wordOutputs/${handledFileName}.docx`;
-    ensureRecursiveDirectoryExistence(path.resolve(__dirname, outPutPath));
-    fs.writeFileSync(path.resolve(__dirname, outPutPath), buf);
+    const outPutPath = `/output/wordOutputs/${handledFileName}.docx`;
+    ensureRecursiveDirectoryExistence(path.join(appDocsFolder, outPutPath));
+    fs.writeFileSync(path.join(appDocsFolder, outPutPath), buf);
     return outPutPath;
 }
 

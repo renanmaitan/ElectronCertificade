@@ -89,7 +89,7 @@ async function createWindow() {
         }
         list.forEach(item => {
             const docxPath = createDocx(item.name, item.cpf, templateName);
-            const pdfPath = `../../output/pdfOutputs/fromWord/${item.name}.pdf`;
+            const pdfPath = `/output/pdfOutputs/fromWord/${item.name}.pdf`;
             convertToPdf(docxPath, pdfPath, 'docx');
         });
     });
@@ -108,7 +108,7 @@ async function createWindow() {
         }
         list.forEach(item => {
             const pptxPath = createPptx(item.name, item.cpf, templateName);
-            const pdfPath = `../../output/pdfOutputs/fromPptx/${item.name}.pdf`;
+            const pdfPath = `/output/pdfOutputs/fromPptx/${item.name}.pdf`;
             convertToPdf(pptxPath, pdfPath, 'pptx');
         });
     });

@@ -1,5 +1,9 @@
 const fs = require('fs');
 const path = require('path');
+const { app } = require('electron');
+
+const documentsFolder = app.getPath('documents');
+const appDocsFolder = path.join(documentsFolder, 'ElectronCertificate');
 
 function ensureDirectoryExists(directory) {
     if (!fs.existsSync(directory)) {
@@ -8,13 +12,13 @@ function ensureDirectoryExists(directory) {
 }
 
 function getTemplateName () {
-    const fileNameTemplateFolder = path.join(__dirname, '..', '..', 'templates', 'fileNameTemplate', 'fileNameTemplate.txt');
+    const fileNameTemplateFolder = path.join(appDocsFolder, 'templates', 'fileNameTemplate', 'fileNameTemplate.txt');
     const fileNameTemplate = fs.readFileSync(fileNameTemplateFolder, 'utf8');
     return fileNameTemplate;
 }
 
 function loadFiles(mainWindow) {
-    const wordTemplateFolder = path.join(__dirname, '..', '..', 'templates', 'wordTemplate');
+    const wordTemplateFolder = path.join(appDocsFolder, 'templates', 'wordTemplate');
     ensureDirectoryExists(wordTemplateFolder);
     const wordFiles = fs.readdirSync(wordTemplateFolder);
     const docxFiles = wordFiles.filter(file => path.extname(file).toLowerCase() === '.docx');
@@ -31,7 +35,7 @@ function loadFiles(mainWindow) {
         mainWindow.webContents.send('wordTemplate', '');
     }
 
-    const pptxTemplateFolder = path.join(__dirname, '..', '..', 'templates', 'pptxTemplate');
+    const pptxTemplateFolder = path.join(appDocsFolder, 'templates', 'pptxTemplate');
     ensureDirectoryExists(pptxTemplateFolder);
     const pptFiles = fs.readdirSync(pptxTemplateFolder);
     const pptxFiles = pptFiles.filter(file => path.extname(file).toLowerCase() === '.pptx');
@@ -48,7 +52,7 @@ function loadFiles(mainWindow) {
         mainWindow.webContents.send('pptxTemplate', '');
     }
 
-    const fileNameTemplateFolder = path.join(__dirname, '..', '..', 'templates', 'fileNameTemplate');
+    const fileNameTemplateFolder = path.join(appDocsFolder, 'templates', 'fileNameTemplate');
     ensureDirectoryExists(fileNameTemplateFolder);
     const fileNameFiles = fs.readdirSync(fileNameTemplateFolder);
     const fileNameTxtFiles = fileNameFiles.filter(file => path.extname(file).toLowerCase() === '.txt');
@@ -71,7 +75,7 @@ function loadFiles(mainWindow) {
 }
 
 function rewriteFile(filePath, folderTargetName, mainWindow) {
-    const folderTarget = path.join(__dirname, '..', '..', 'templates', folderTargetName);
+    const folderTarget = path.join(appDocsFolder, 'templates', folderTargetName);
     ensureDirectoryExists(folderTarget);
     const filesInFolder = fs.readdirSync(folderTarget);
     filesInFolder.forEach(file => {
@@ -83,7 +87,7 @@ function rewriteFile(filePath, folderTargetName, mainWindow) {
 }
 
 function createFile(fileName, fileContent, folderTargetName) {
-    const folderTarget = path.join(__dirname, '..', '..', 'templates', folderTargetName);
+    const folderTarget = path.join(appDocsFolder, 'templates', folderTargetName);
     ensureDirectoryExists(folderTarget);
     const filePath = path.join(folderTarget, fileName);
     fs.writeFileSync(filePath, fileContent);
