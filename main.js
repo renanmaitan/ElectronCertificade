@@ -2,7 +2,7 @@ const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron');
 
 const { loadFiles, rewriteFile, createFile, getTemplateName } = require('./src/utils/fileOperations');
 const { addToList, removeItemsFromList, updateItemFromList, clearList, addFromPaste, getList } = require('./src/utils/listOperations');
-const createPPTX = require('./src/utils/pptxCreate');
+const createPptx = require('./src/utils/pptxCreate');
 const createDocx = require('./src/utils/docxCreate');
 const convertToPdf = require('./src/utils/convertToPdf');
 
@@ -75,10 +75,6 @@ async function createWindow() {
         event.returnValue = result;
     });
 
-    ipcMain.on('createPPTX', (event, message) => {
-        createPPTX(message.name, message.cpf);
-    });
-
     ipcMain.on('createDocx', (event, message) => {
         const templateName = getTemplateName();
         const list = getList();
@@ -95,6 +91,25 @@ async function createWindow() {
             const docxPath = createDocx(item.name, item.cpf, templateName);
             const pdfPath = `../../output/pdfOutputs/fromWord/${item.name}.pdf`;
             convertToPdf(docxPath, pdfPath, 'docx');
+        });
+    });
+
+    ipcMain.on('createPptx', (event, message) => {
+        const templateName = getTemplateName();
+        const list = getList();
+        if (!list.length) {
+            dialog.showMessageBox(mainWindow, {
+                title: 'Alerta',
+                type: 'warning',
+                message: 'Nenhum certificado gerado! A lista está vazia.',
+                buttons: ['OK']
+            });
+            return;
+        }
+        list.forEach(item => {
+            const pptxPath = createPptx(item.name, item.cpf, templateName);
+            const pdfPath = `../../output/pdfOutputs/fromPptx/${item.name}.pdf`;
+            convertToPdf(pptxPath, pdfPath, 'pptx');
         });
     });
 

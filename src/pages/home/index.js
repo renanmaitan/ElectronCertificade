@@ -57,6 +57,9 @@ function handleChangePptxTemplate(path) {
 btnWord.addEventListener('click', () => {
     ipcRenderer.send('createDocx');
 });
+btnPptx.addEventListener('click', () => {
+    ipcRenderer.send('createPptx');
+});
 wordTemplateFile.addEventListener('change', (event) => {
     handleChangeWordTemplate(event.target.files[0].path);
 });

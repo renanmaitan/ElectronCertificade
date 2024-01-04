@@ -11,7 +11,6 @@ function ensureRecursiveDirectoryExistence(filePath) {
     if (fs.existsSync(dirname)) {
         return;
     }
-    ensureRecursiveDirectoryExistence(dirname);
     fs.mkdirSync(dirname, { recursive: true });
 }
 
