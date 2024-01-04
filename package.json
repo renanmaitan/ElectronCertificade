@@ -1,18 +1,37 @@
 {
-  "name": "electroncertificade",
+  "name": "electroncertificate",
+  "productName": "Electron Certificate",
   "version": "1.0.0",
-  "description": "",
+  "description": "A certificate generator app",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "dev": "nodemon --exec electron ."
+    "dev": "nodemon --exec electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "keywords": [],
-  "author": "",
+  "author": "Renan Maitan",
   "license": "ISC",
   "dependencies": {
     "docxtemplater": "^3.42.7",
-    "electron": "^28.1.0",
     "pizzip": "^3.1.4"
+  },
+  "devDependencies": {
+    "electron": "^28.1.1",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.renanmaitan.electroncertificate",
+    "files": [
+      "./convert/**/*",
+      "./node_modules/**/*",
+      "./src/**/*",
+      "./main.js",
+      "./node_modules/**/*"
+    ],
+    "win": {
+      "target": "nsis"
+    }
   }
 }
