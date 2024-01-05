@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const docsPath = path.join(__dirname, '..', '..', 'templates');
+
 function ensureDirectoryExists(directory) {
     if (!fs.existsSync(directory)) {
         fs.mkdirSync(directory, { recursive: true });
@@ -8,13 +10,13 @@ function ensureDirectoryExists(directory) {
 }
 
 function getTemplateName () {
-    const fileNameTemplateFolder = path.join(__dirname, '..', '..', 'templates', 'fileNameTemplate', 'fileNameTemplate.txt');
+    const fileNameTemplateFolder = path.join(docsPath, 'fileNameTemplate', 'fileNameTemplate.txt');
     const fileNameTemplate = fs.readFileSync(fileNameTemplateFolder, 'utf8');
     return fileNameTemplate;
 }
 
 function loadFiles(mainWindow) {
-    const wordTemplateFolder = path.join(__dirname, '..', '..', 'templates', 'wordTemplate');
+    const wordTemplateFolder = path.join(docsPath, 'wordTemplate');
     ensureDirectoryExists(wordTemplateFolder);
     const wordFiles = fs.readdirSync(wordTemplateFolder);
     const docxFiles = wordFiles.filter(file => path.extname(file).toLowerCase() === '.docx');
@@ -31,7 +33,7 @@ function loadFiles(mainWindow) {
         mainWindow.webContents.send('wordTemplate', '');
     }
 
-    const pptxTemplateFolder = path.join(__dirname, '..', '..', 'templates', 'pptxTemplate');
+    const pptxTemplateFolder = path.join(docsPath, 'pptxTemplate');
     ensureDirectoryExists(pptxTemplateFolder);
     const pptFiles = fs.readdirSync(pptxTemplateFolder);
     const pptxFiles = pptFiles.filter(file => path.extname(file).toLowerCase() === '.pptx');
@@ -48,26 +50,43 @@ function loadFiles(mainWindow) {
         mainWindow.webContents.send('pptxTemplate', '');
     }
 
-    const fileNameTemplateFolder = path.join(__dirname, '..', '..', 'templates', 'fileNameTemplate');
+    const fileNameTemplateFolder = path.join(docsPath, 'fileNameTemplate');
     ensureDirectoryExists(fileNameTemplateFolder);
     const fileNameFiles = fs.readdirSync(fileNameTemplateFolder);
     const fileNameTxtFiles = fileNameFiles.filter(file => path.extname(file).toLowerCase() === '.txt');
-    if (fileNameTxtFiles.length === 1) {
-        return;
-    } else if (fileNameTxtFiles.length > 1) {
+    if (fileNameTxtFiles.length !== 1) {
+        if (fileNameTxtFiles.length > 1) {
         fileNameTxtFiles.forEach(fileNameTxtFile => {
             const fileNameTxtFilePath = path.join(fileNameTemplateFolder, fileNameTxtFile);
             fs.unlinkSync(fileNameTxtFilePath);
         });
+        } else {
+            // create with the default name (Certificado - {nome})
+            const defaultFileName = 'Certificado - {nome}';
+            createFile('fileNameTemplate.txt', defaultFileName, 'fileNameTemplate');
+        }
+    }
+
+    const tableTemplateFolder = path.join(docsPath, 'tableTemplate');
+    ensureDirectoryExists(tableTemplateFolder);
+    const tableFiles = fs.readdirSync(tableTemplateFolder);
+    const tableDocxFiles = tableFiles.filter(file => path.extname(file).toLowerCase() === '.docx');
+    if (tableDocxFiles.length === 1) {
+        const tableDocxFile = tableDocxFiles[0];
+        const tableDocxFilePath = path.join(tableTemplateFolder, tableDocxFile);
+        mainWindow.webContents.send('tableTemplate', tableDocxFilePath);
+    } else if (tableDocxFiles.length > 1) {
+        tableDocxFiles.forEach(tableDocxFile => {
+            const tableDocxFilePath = path.join(tableTemplateFolder, tableDocxFile);
+            fs.unlinkSync(tableDocxFilePath);
+        });
     } else {
-        // create with the default name (Certificado - {nome})
-        const defaultFileName = 'Certificado - {nome}';
-        createFile('fileNameTemplate.txt', defaultFileName, 'fileNameTemplate');
+        mainWindow.webContents.send('tableTemplate', '');
     }
 }
 
 function rewriteFile(filePath, folderTargetName, mainWindow) {
-    const folderTarget = path.join(__dirname, '..', '..', 'templates', folderTargetName);
+    const folderTarget = path.join(docsPath, folderTargetName);
     ensureDirectoryExists(folderTarget);
     const filesInFolder = fs.readdirSync(folderTarget);
     filesInFolder.forEach(file => {
@@ -79,11 +98,22 @@ function rewriteFile(filePath, folderTargetName, mainWindow) {
 }
 
 function createFile(fileName, fileContent, folderTargetName) {
-    const folderTarget = path.join(__dirname, '..', '..', 'templates', folderTargetName);
+    const folderTarget = path.join(docsPath, folderTargetName);
     ensureDirectoryExists(folderTarget);
     const filePath = path.join(folderTarget, fileName);
     fs.writeFileSync(filePath, fileContent);
 }
 
+function getWithTelAndEmail() {
+    const withTelAndEmailFolder = path.join(docsPath, 'withTelAndEmail');
+    ensureDirectoryExists(withTelAndEmailFolder);
+    const withTelAndEmailFile = path.join(withTelAndEmailFolder, 'withTelAndEmail.txt');
+    if (!fs.existsSync(withTelAndEmailFile)) {
+        fs.writeFileSync(withTelAndEmailFile, 'false');
+    }
+    const withTelAndEmail = fs.readFileSync(withTelAndEmailFile, 'utf8');
+    return withTelAndEmail === 'true';
+}
 
-module.exports = { loadFiles, rewriteFile, createFile, getTemplateName };
+
+module.exports = { loadFiles, rewriteFile, createFile, getTemplateName, getWithTelAndEmail };

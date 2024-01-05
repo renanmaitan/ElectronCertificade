@@ -50,3 +50,7 @@ button:hover {
     background-color: #da190b;
     border-color: black;
 }
+
+.hidden {
+    display: none;
+}

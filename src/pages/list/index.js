@@ -1,5 +1,6 @@
 const {ipcRenderer} = require('electron');
 const lista = [];
+let withTelAndEmail = false;
 
 ipcRenderer.send('getList');
 
@@ -8,8 +9,22 @@ ipcRenderer.on('getListResponse', (event, message) => {
     displayData();
 });
 
+ipcRenderer.on('withTelAndEmail', (event, message) => {
+    withTelAndEmail = message;
+    displayData();
+});
+
 // Função para exibir os dados na tabela
 function displayData() {
+    console.log(withTelAndEmail);
+    if (withTelAndEmail) {
+        document.getElementById('telColumn').classList.remove('hidden');
+        document.getElementById('emailColumn').classList.remove('hidden');
+    } else {
+        document.getElementById('telColumn').classList.add('hidden');
+        document.getElementById('emailColumn').classList.add('hidden');
+    }
+
     const tableBody = document.getElementById('tableBody');
     tableBody.innerHTML = ''; // Limpa a tabela antes de adicionar os dados
 
@@ -18,6 +33,8 @@ function displayData() {
         row.insertCell().textContent = item.name;
         row.insertCell().textContent = item.cpf;
         row.insertCell().textContent = item.birthDate;
+        row.insertCell().textContent = item.tel;
+        row.insertCell().textContent = item.email;
 
         const actionsCell = row.insertCell();
         
