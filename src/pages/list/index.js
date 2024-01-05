@@ -1,11 +1,26 @@
 const {ipcRenderer} = require('electron');
 const lista = [];
-let withTelAndEmail = false;
+let withTelAndEmail;
 
 ipcRenderer.send('getList');
+console.log('getList');
+
+//ELEMENTS
+const reloadIcon = document.getElementById('reloadIcon');
+const realodContainer = document.getElementById('reloadContainer');
+const realodingContainer = document.getElementById('reloadingContainer');
+
+//EVENTS
+reloadIcon.addEventListener('click', () => {
+    realodContainer.classList.add('hidden');
+    realodingContainer.classList.remove('hidden');
+    ipcRenderer.send('reloadList');
+});
 
 ipcRenderer.on('getListResponse', (event, message) => {
     lista.push(...message);
+    realodContainer.classList.remove('hidden');
+    realodingContainer.classList.add('hidden');
     displayData();
 });
 

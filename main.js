@@ -27,7 +27,10 @@ async function createListWindow() {
     });
     (withTelAndEmail && listWindow.maximize());
     await listWindow.loadFile('src/pages/list/index.html');
-    listWindow.webContents.send('withTelAndEmail', withTelAndEmail);
+    ipcMain.on('reloadList', () => {
+        listWindow.webContents.reload();
+    });
+    listWindow.webContents.send('withTelAndEmail', getWithTelAndEmail());
     listWindow.show();
 }
 

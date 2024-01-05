@@ -5,10 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Nomes</title>
     <link rel="stylesheet" href="./styles.css" type="text/css">
+    <link rel="stylesheet" href="../../../node_modules/font-awesome/css/font-awesome.min.css" type="text/css">
 </head>
 <body>
     <h1>Lista de Nomes</h1>
-    
+    <div class="reload" id="reloadContainer">
+        <i class="fa fa-refresh icon-reload" id="reloadIcon"></i>
+    </div>
+    <div class="reload hidden" id="reloadingContainer">
+        <i class="fa fa-refresh fa-spin icon-reload" id="reloadingIcon"></i>
+    </div>
     <table>
         <thead>
             <tr id="tableHeader">
