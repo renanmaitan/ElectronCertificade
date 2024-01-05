@@ -54,7 +54,8 @@ async function createOptionsWindow() {
 async function createWindow() {
     mainWindow = new BrowserWindow({
         width: 1000,
-        height: 700,
+        height: 800,
+        show: false,
         webPreferences: {
             nodeIntegration: true, // enable node integration
             contextIsolation: false, // enable ipcRenderer
@@ -167,6 +168,8 @@ async function createWindow() {
             convertToPdf(pptxPath, pdfPath, 'pptx');
         });
     });
+
+    mainWindow.show();
 }
 
 // menu
