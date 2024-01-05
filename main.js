@@ -22,6 +22,25 @@ async function createListWindow() {
     await listWindow.loadFile('src/pages/list/index.html');
 }
 
+async function createOptionsWindow() {
+    const optionsWindow = new BrowserWindow({
+        width: 400,
+        height: 200,
+        webPreferences: {
+            nodeIntegration: true, // enable node integration
+            contextIsolation: false, // enable ipcRenderer
+            enableRemoteModule: true // enable remote
+        }
+    });
+    await optionsWindow.loadFile('src/pages/options/index.html');
+    optionsWindow.webContents.send('fileNameTemplate', getTemplateName());
+
+    ipcMain.on('fileNameTemplate', (event, message) => {
+        createFile('fileNameTemplate.txt', message, 'fileNameTemplate');
+        optionsWindow.webContents.send('fileNameTemplate', message);
+    });
+}
+
 
 async function createWindow() {
     mainWindow = new BrowserWindow({
@@ -47,6 +66,10 @@ async function createWindow() {
 
     ipcMain.on('createListWindow', (event, message) => {
         createListWindow();
+    });
+
+    ipcMain.on('createOptionsWindow', (event, message) => {
+        createOptionsWindow();
     });
 
     ipcMain.on('addToList', (event, message) => {
@@ -111,11 +134,6 @@ async function createWindow() {
             const pdfPath = `../../output/pdfOutputs/fromPptx/${item.name}.pdf`;
             convertToPdf(pptxPath, pdfPath, 'pptx');
         });
-    });
-
-    ipcMain.on('fileNameTemplate', (event, message) => {
-        createFile('fileNameTemplate.txt', message, 'fileNameTemplate');
-        mainWindow.webContents.send('fileNameTemplate', message);
     });
 }
 

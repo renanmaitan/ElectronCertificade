@@ -3,13 +3,11 @@ const { ipcRenderer } = require('electron');
 //ELEMENTS
 const wordTemplateFile = document.getElementById('wordTemplate');
 const pptxTemplateFile = document.getElementById('pptxTemplate');
-const fileNameInput = document.getElementById('fileNameInput');
+
 const wordLabel = document.getElementById('wordLabel');
 const pptxLabel = document.getElementById('pptxLabel');
-const fileNameLabel = document.getElementById('fileNameLabel');
 const btnList = document.getElementById('btnList');
 const btnClear = document.getElementById('btnClear');
-const btnFileName = document.getElementById('btnFileName');
 const birthDateInput = document.getElementById('birthdate');
 const cpfInput = document.getElementById('cpf');
 const btnAdd = document.getElementById('btnAdd');
@@ -22,6 +20,7 @@ const btnAddMany = document.getElementById('btnAddMany');
 const alertMany = document.getElementById('alertMany');
 const btnWord = document.getElementById('btnWord');
 const btnPptx = document.getElementById('btnPptx');
+const btnOptions = document.getElementById('btnOptions');
 
 //MAKS INPUTS
 cpfInput.addEventListener('blur', () => {
@@ -54,6 +53,9 @@ function handleChangePptxTemplate(path) {
 }
 
 //EVENTS
+btnOptions.addEventListener('click', () => {
+    ipcRenderer.send('createOptionsWindow');
+});
 btnWord.addEventListener('click', () => {
     ipcRenderer.send('createDocx');
 });
@@ -71,10 +73,6 @@ btnList.addEventListener('click', () => {
 });
 btnClear.addEventListener('click', () => {
     ipcRenderer.send('clearList');
-});
-btnFileName.addEventListener('click', () => {
-    ipcRenderer.send('fileNameTemplate', fileNameInput.value);
-    fileNameInput.value = '';
 });
 btnAdd.addEventListener('click', () => {
     const result = ipcRenderer.sendSync('addToList', { name: name.value, cpf: cpf.value, birthDate: birthdate.value });
@@ -97,12 +95,6 @@ btnAddMany.addEventListener('click', () => {
     else {
         alertMany.classList.remove('hidden');
         alertMany.innerHTML = '*'+result.message;
-    }
-});
-
-ipcRenderer.on('fileNameTemplate', (event, message) => {
-    if (message !== '') {
-        fileNameLabel.innerHTML = message;
     }
 });
 

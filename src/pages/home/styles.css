@@ -1,30 +1,32 @@
-html, body{
+html,
+body {
     height: 100%;
     width: 100%;
     margin: 0;
     padding: 0;
 }
 
-*{
+* {
     box-sizing: border-box;
     font-family: sans-serif;
 }
 
-.container{
+.container {
     height: 100%;
     width: 100%;
     background-color: #3e3e3e;
 }
 
-.fileContainer{
+.fileContainer {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin-inline: 0.8rem;
+    height: 100%;
+    margin-top: 3%;
 }
 
-.content{
+.content {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -34,7 +36,7 @@ html, body{
     width: 100%;
 }
 
-.group{
+.group {
     display: flex;
     width: 100%;
     justify-content: center;
@@ -42,12 +44,12 @@ html, body{
     align-items: center;
 }
 
-.title{
+.title {
     color: #fff;
     font-size: 2rem;
 }
 
-.btn{
+.btn {
     background-color: #2d2226;
     color: #fff;
     padding: 0.75rem 1.25rem;
@@ -57,16 +59,16 @@ html, body{
     margin: 0 0.5rem;
 }
 
-.btn#btnWord{
+.btn#btnWord {
     background-color: cornflowerblue;
 }
 
-.btn#btnPptx{
-    background-color:rgb(193, 61, 61);
+.btn#btnPptx {
+    background-color: rgb(193, 61, 61);
 }
 
-.btn:hover{
-    background-color:darkgreen;
+.btn:hover {
+    background-color: darkgreen;
     color: #fff;
 }
 
@@ -78,18 +80,18 @@ html, body{
     background-color: darkgreen;
 }
 
-h2{
+h2 {
     color: #fff;
     font-size: 1.5rem;
     margin-bottom: 0.5rem;
 }
 
-label{
+label {
     color: #fff;
     font-size: 1rem;
 }
 
-input{
+input {
     padding: 0.5rem;
     border-radius: 0.5rem;
     border: 1px solid #fff;
@@ -98,29 +100,29 @@ input{
     font-size: 1rem;
 }
 
-p{
+p {
     color: #fff;
     font-size: 0.8rem;
     margin: 0;
     margin-bottom: 1rem;
 }
 
-#names{
+#names {
     width: 80%;
     height: 100%;
     margin-bottom: 1rem;
 }
 
-#names:focus{
+#names:focus {
     outline: none;
     border: 2px solid cornflowerblue;
 }
 
-.hidden{
+.hidden {
     display: none;
 }
 
-.inputFile{
+.inputFile {
     padding: 0.3rem;
     border: 2px solid rgb(99, 99, 99);
     font-size: 1rem;
@@ -129,6 +131,15 @@ p{
     cursor: pointer;
 }
 
-.inputFile:hover{
+.inputFile:hover {
     background-color: rgb(148, 228, 255);
+}
+
+.config-icon {
+    color: white;
+    font-size: 24px;
+    position: fixed;
+    top: 4%;
+    right: 3%;
+    cursor: pointer;
 }

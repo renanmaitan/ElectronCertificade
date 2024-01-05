@@ -4,36 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Electron Certificate</title>
+    <link rel="stylesheet" href="../../../node_modules/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="./styles.css" type="text/css">
 </head>
 
 <body>
     <div class="container">
         <div class="content">
+            <i class="fa fa-cog config-icon" id="btnOptions"></i>
             <h1 class="title">Electron Certificate</h1>
             <div class="group">
-                <button class="btn" id="btnWord">Gerar certificado WORD</button>
-                <button class="btn" id="btnPptx">Gerar certificado PPTX</button>
+                <div>
+                    <button class="btn" id="btnWord">Gerar certificado WORD</button>
+                    <div class="fileContainer">
+                        <p style="margin: 2%;">Modelo word:</p>
+                        <label for="wordTemplate" class="inputFile" id="wordLabel"></label>
+                        <input type="file" class="hidden" id="wordTemplate" accept=".docx">
+                    </div>
+                </div>
+                <div>
+                    <button class="btn" id="btnPptx">Gerar certificado PPTX</button>
+                    <div class="fileContainer">
+                        <p style="margin: 2%;">Modelo powerpoint:</p>
+                        <label for="pptxTemplate" class="inputFile" id="pptxLabel"></label>
+                        <input type="file" class="hidden" id="pptxTemplate" accept=".pptx">
+                    </div>
+                </div>
             </div>
             <div class="group">
-                <button class="btn" id="btnList" style="height: 40%;">Ver lista</button>
-                <button class="btn" id="btnClear" style="height: 40%;">Limpar lista</button>
-                <div class="fileContainer">
-                    <p style="margin-bottom: 6%;">Modelo word</p>
-                    <label for="wordTemplate" class="inputFile" id="wordLabel"></label>
-                    <input type="file" class="hidden" id="wordTemplate" accept=".docx">
-                </div>
-                <div class="fileContainer">
-                    <p style="margin-bottom: 6%;">Modelo powerpoint</p>
-                    <label for="pptxTemplate" class="inputFile" id="pptxLabel"></label>
-                    <input type="file" class="hidden" id="pptxTemplate" accept=".pptx">
-                </div>
-                <div class="fileContainer">
-                    <p style="margin: 0;">Modelo de nome do Arquivo<br></p>
-                    <p style="margin: 0;">Modelo atual: <strong id="fileNameLabel" style="color: aqua;"></strong></p>
-                    <input type="text" id="fileNameInput">
-                    <button class="btn" id="btnFileName">Salvar</button>
-                </div>
+                <button class="btn" id="btnList">Ver lista</button>
+                <button class="btn" id="btnClear">Limpar lista</button>
             </div>
             <div class="group" style="height: 60%;">
                 <div class="content" style="width: 40%;">
