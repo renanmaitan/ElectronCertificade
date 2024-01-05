@@ -1,4 +1,5 @@
-const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, dialog, shell } = require('electron');
+const path = require('path');
 
 const { loadFiles, rewriteFile, createFile, getTemplateName } = require('./src/utils/fileOperations');
 const { addToList, removeItemsFromList, updateItemFromList, clearList, addFromPaste, getList } = require('./src/utils/listOperations');
@@ -63,6 +64,20 @@ async function createWindow() {
     ipcMain.on('pptxTemplate', (event, message) => {
         rewriteFile(message, 'pptxTemplate', mainWindow);
     });
+
+    ipcMain.on('showFiles', (event, message) => {
+        if (message === 'word') {
+            shell.openPath(path.join(__dirname, 'output', 'wordOutputs'));
+        } else if (message === 'pptx') {
+            shell.openPath(path.join(__dirname, 'output', 'pptxOutputs'));
+        } else if (message === 'pdf_pptx') {
+            shell.openPath(path.join(__dirname, 'output', 'pdfOutputs', 'fromPptx'));
+        } else if (message === 'pdf_word') {
+            shell.openPath(path.join(__dirname, 'output', 'pdfOutputs', 'fromWord'));
+        } else {
+            shell.openPath(path.join(__dirname, 'output'));
+        }
+    }); 
 
     ipcMain.on('createListWindow', (event, message) => {
         createListWindow();

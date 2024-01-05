@@ -21,6 +21,10 @@ const alertMany = document.getElementById('alertMany');
 const btnWord = document.getElementById('btnWord');
 const btnPptx = document.getElementById('btnPptx');
 const btnOptions = document.getElementById('btnOptions');
+const btnShowWordFiles = document.getElementById('btnShowWordFiles');
+const btnShowPptxFiles = document.getElementById('btnShowPptxFiles');
+const btnShowPdfFromWordFiles = document.getElementById('btnShowPdfFromWordFiles');
+const btnShowPdfFromPptxFiles = document.getElementById('btnShowPdfFromPptxFiles');
 
 //MAKS INPUTS
 cpfInput.addEventListener('blur', () => {
@@ -53,6 +57,18 @@ function handleChangePptxTemplate(path) {
 }
 
 //EVENTS
+btnShowWordFiles.addEventListener('click', () => {
+    ipcRenderer.send('showFiles', 'word');
+});
+btnShowPptxFiles.addEventListener('click', () => {
+    ipcRenderer.send('showFiles', 'pptx');
+});
+btnShowPdfFromWordFiles.addEventListener('click', () => {
+    ipcRenderer.send('showFiles', 'pdf_word');
+});
+btnShowPdfFromPptxFiles.addEventListener('click', () => {
+    ipcRenderer.send('showFiles', 'pdf_pptx');
+});
 btnOptions.addEventListener('click', () => {
     ipcRenderer.send('createOptionsWindow');
 });
