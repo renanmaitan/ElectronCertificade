@@ -14,17 +14,21 @@ const filesPath = __dirname;
 let mainWindow = null;
 
 async function createListWindow() {
+    const withTelAndEmail = getWithTelAndEmail();
     const listWindow = new BrowserWindow({
         width: 900,
         height: 500,
+        show: false,
         webPreferences: {
             nodeIntegration: true, // enable node integration
             contextIsolation: false, // enable ipcRenderer
             enableRemoteModule: true // enable remote
         }
     });
+    (withTelAndEmail && listWindow.maximize());
     await listWindow.loadFile('src/pages/list/index.html');
-    listWindow.webContents.send('withTelAndEmail', getWithTelAndEmail());
+    listWindow.webContents.send('withTelAndEmail', withTelAndEmail);
+    listWindow.show();
 }
 
 async function createOptionsWindow() {
@@ -49,7 +53,7 @@ async function createOptionsWindow() {
 
 async function createWindow() {
     mainWindow = new BrowserWindow({
-        width: 850,
+        width: 1000,
         height: 700,
         webPreferences: {
             nodeIntegration: true, // enable node integration
@@ -59,6 +63,7 @@ async function createWindow() {
     });
     await mainWindow.loadFile('src/pages/home/index.html');
     loadFiles(mainWindow);
+    mainWindow.webContents.send('withTelAndEmail', getWithTelAndEmail());
     //mainWindow.webContents.openDevTools();
 
     ipcMain.on('wordTemplate', (event, message) => {

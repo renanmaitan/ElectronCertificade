@@ -33,8 +33,8 @@ function displayData() {
         row.insertCell().textContent = item.name;
         row.insertCell().textContent = item.cpf;
         row.insertCell().textContent = item.birthDate;
-        row.insertCell().textContent = item.tel;
-        row.insertCell().textContent = item.email;
+        (withTelAndEmail? row.insertCell().textContent = item.tel : null);
+        (withTelAndEmail? row.insertCell().textContent = item.email : null);
 
         const actionsCell = row.insertCell();
         

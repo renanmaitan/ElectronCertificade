@@ -1,5 +1,7 @@
 const { ipcRenderer } = require('electron');
 
+let withTelAndEmail = false;
+
 //ELEMENTS
 const wordTemplateFile = document.getElementById('wordTemplate');
 const pptxTemplateFile = document.getElementById('pptxTemplate');
@@ -28,6 +30,7 @@ const btnShowWordFiles = document.getElementById('btnShowWordFiles');
 const btnShowPptxFiles = document.getElementById('btnShowPptxFiles');
 const btnShowPdfFromWordFiles = document.getElementById('btnShowPdfFromWordFiles');
 const btnShowPdfFromPptxFiles = document.getElementById('btnShowPdfFromPptxFiles');
+const example = document.getElementById('example');
 
 //MAKS INPUTS
 cpfInput.addEventListener('blur', () => {
@@ -51,16 +54,22 @@ birthDateInput.addEventListener('focus', () => {
     birthDateInput.maxLength = 8;
 });
 
+
+//FUNCTIONS
 function handleChangeWordTemplate(path) {
     ipcRenderer.send('wordTemplate', path);
 }
-
 function handleChangePptxTemplate(path) {
     ipcRenderer.send('pptxTemplate', path);
 }
-
 function handleChangeTableTemplate(path) {
     ipcRenderer.send('tableTemplate', path);
+}
+function switchWithTelAndEmail() {
+    if (withTelAndEmail)
+        example.innerHTML = '*Modelo: Nome CPF DD/MM/AAAA<br>*Exemplo: João da Silva 123.456.789-10 01/01/2000 (14) 99999-1111 joaodasilva@email.com<br>*Separe os itens por quebra de linha (ENTER)'
+    else
+        example.innerHTML = '*Modelo: Nome CPF DD/MM/AAAA<br>*Exemplo: João da Silva 123.456.789-10 01/01/2000<br>*Separe os itens por quebra de linha (ENTER)'
 }
 
 //EVENTS
@@ -156,4 +165,9 @@ ipcRenderer.on('tableTemplate', (event, message) => {
     else {
         tableLabel.innerHTML = fileName;
     }
+});
+
+ipcRenderer.on('withTelAndEmail', (event, message) => {
+    withTelAndEmail = message;
+    switchWithTelAndEmail();
 });
