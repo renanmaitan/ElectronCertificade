@@ -3,9 +3,11 @@ const { ipcRenderer } = require('electron');
 //ELEMENTS
 const wordTemplateFile = document.getElementById('wordTemplate');
 const pptxTemplateFile = document.getElementById('pptxTemplate');
+const tableTemplateFile = document.getElementById('tableTemplate');
 
 const wordLabel = document.getElementById('wordLabel');
 const pptxLabel = document.getElementById('pptxLabel');
+const tableLabel = document.getElementById('tableLabel');
 const btnList = document.getElementById('btnList');
 const btnClear = document.getElementById('btnClear');
 const birthDateInput = document.getElementById('birthdate');
@@ -20,6 +22,7 @@ const btnAddMany = document.getElementById('btnAddMany');
 const alertMany = document.getElementById('alertMany');
 const btnWord = document.getElementById('btnWord');
 const btnPptx = document.getElementById('btnPptx');
+const btnTable = document.getElementById('btnTable');
 const btnOptions = document.getElementById('btnOptions');
 const btnShowWordFiles = document.getElementById('btnShowWordFiles');
 const btnShowPptxFiles = document.getElementById('btnShowPptxFiles');
@@ -56,6 +59,10 @@ function handleChangePptxTemplate(path) {
     ipcRenderer.send('pptxTemplate', path);
 }
 
+function handleChangeTableTemplate(path) {
+    ipcRenderer.send('tableTemplate', path);
+}
+
 //EVENTS
 btnShowWordFiles.addEventListener('click', () => {
     ipcRenderer.send('showFiles', 'word');
@@ -78,11 +85,17 @@ btnWord.addEventListener('click', () => {
 btnPptx.addEventListener('click', () => {
     ipcRenderer.send('createPptx');
 });
+btnTable.addEventListener('click', () => {
+    ipcRenderer.send('createTable');
+});
 wordTemplateFile.addEventListener('change', (event) => {
     handleChangeWordTemplate(event.target.files[0].path);
 });
 pptxTemplateFile.addEventListener('change', (event) => {
     handleChangePptxTemplate(event.target.files[0].path);
+});
+tableTemplateFile.addEventListener('change', (event) => {
+    handleChangeTableTemplate(event.target.files[0].path);
 });
 btnList.addEventListener('click', () => {
     ipcRenderer.send('createListWindow');
@@ -132,5 +145,15 @@ ipcRenderer.on('pptxTemplate', (event, message) => {
     }
     else {
         pptxLabel.innerHTML = fileName;
+    }
+});
+
+ipcRenderer.on('tableTemplate', (event, message) => {
+    const fileName = message.split('\\').pop();
+    if (message === '') {
+        tableLabel.innerHTML = 'Selecione um arquivo';
+    }
+    else {
+        tableLabel.innerHTML = fileName;
     }
 });

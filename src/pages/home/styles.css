@@ -24,6 +24,7 @@ body {
     align-items: center;
     height: 100%;
     margin-top: 3%;
+    white-space: nowrap;
 }
 
 .content {
@@ -59,24 +60,32 @@ body {
     margin: 0 0.5rem;
 }
 
-.btn#btnWord {
-    background-color: rgb(78, 116, 186);
-}
-
-.btn#btnPptx {
-    background-color: rgb(193, 61, 61);
-}
-
 .btn:hover {
     background-color: darkgreen;
     color: #fff;
+}
+
+.btn#btnWord {
+    background-color: rgb(78, 116, 186);
 }
 
 .btn#btnWord:hover {
     background-color: darkgreen;
 }
 
+.btn#btnPptx {
+    background-color: rgb(193, 61, 61);
+}
+
 .btn#btnPptx:hover {
+    background-color: darkgreen;
+}
+
+.btn#btnTable {
+    background-color: rgb(193, 61, 61);
+}
+
+.btn#btnTable:hover {
     background-color: darkgreen;
 }
 

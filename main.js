@@ -25,7 +25,6 @@ async function createListWindow() {
     });
     await listWindow.loadFile('src/pages/list/index.html');
     listWindow.webContents.send('withTelAndEmail', getWithTelAndEmail());
-    listWindow.webContents.openDevTools();
 }
 
 async function createOptionsWindow() {
@@ -68,6 +67,10 @@ async function createWindow() {
 
     ipcMain.on('pptxTemplate', (event, message) => {
         rewriteFile(message, 'pptxTemplate', mainWindow);
+    });
+
+    ipcMain.on('tableTemplate', (event, message) => {
+        rewriteFile(message, 'tableTemplate', mainWindow);
     });
 
     ipcMain.on('showFiles', (event, message) => {
