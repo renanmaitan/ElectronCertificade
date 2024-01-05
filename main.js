@@ -1,11 +1,14 @@
 const { app, BrowserWindow, Menu, ipcMain, dialog, shell } = require('electron');
 const path = require('path');
 
-const { loadFiles, rewriteFile, createFile, getTemplateName } = require('./src/utils/fileOperations');
+const { loadFiles, rewriteFile, createFile, getTemplateName, getWithTelAndEmail } = require('./src/utils/fileOperations');
 const { addToList, removeItemsFromList, updateItemFromList, clearList, addFromPaste, getList } = require('./src/utils/listOperations');
 const createPptx = require('./src/utils/pptxCreate');
 const createDocx = require('./src/utils/docxCreate');
 const convertToPdf = require('./src/utils/convertToPdf');
+const populateTable = require('./src/utils/docxTablePopulate');
+
+const filesPath = __dirname;
 
 // main window
 let mainWindow = null;
@@ -21,6 +24,8 @@ async function createListWindow() {
         }
     });
     await listWindow.loadFile('src/pages/list/index.html');
+    listWindow.webContents.send('withTelAndEmail', getWithTelAndEmail());
+    listWindow.webContents.openDevTools();
 }
 
 async function createOptionsWindow() {
@@ -67,15 +72,15 @@ async function createWindow() {
 
     ipcMain.on('showFiles', (event, message) => {
         if (message === 'word') {
-            shell.openPath(path.join(__dirname, 'output', 'wordOutputs'));
+            shell.openPath(path.join(filesPath, 'output', 'wordOutputs'));
         } else if (message === 'pptx') {
-            shell.openPath(path.join(__dirname, 'output', 'pptxOutputs'));
+            shell.openPath(path.join(filesPath, 'output', 'pptxOutputs'));
         } else if (message === 'pdf_pptx') {
-            shell.openPath(path.join(__dirname, 'output', 'pdfOutputs', 'fromPptx'));
+            shell.openPath(path.join(filesPath, 'output', 'pdfOutputs', 'fromPptx'));
         } else if (message === 'pdf_word') {
-            shell.openPath(path.join(__dirname, 'output', 'pdfOutputs', 'fromWord'));
+            shell.openPath(path.join(filesPath, 'output', 'pdfOutputs', 'fromWord'));
         } else {
-            shell.openPath(path.join(__dirname, 'output'));
+            shell.openPath(path.join(filesPath, 'output'));
         }
     }); 
 
@@ -111,6 +116,10 @@ async function createWindow() {
     ipcMain.on('addFromPaste', (event, message) => {
         const result = addFromPaste(message);
         event.returnValue = result;
+    });
+
+    ipcMain.on('createTable', (event, message) => {
+        populateTable(getList());
     });
 
     ipcMain.on('createDocx', (event, message) => {
