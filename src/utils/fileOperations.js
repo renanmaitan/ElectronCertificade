@@ -53,10 +53,7 @@ function loadFiles(mainWindow) {
     const fileNameFiles = fs.readdirSync(fileNameTemplateFolder);
     const fileNameTxtFiles = fileNameFiles.filter(file => path.extname(file).toLowerCase() === '.txt');
     if (fileNameTxtFiles.length === 1) {
-        const fileNameTxtFile = fileNameTxtFiles[0];
-        const fileNameTxtFilePath = path.join(fileNameTemplateFolder, fileNameTxtFile);
-        const fileNameTxtFileContent = fs.readFileSync(fileNameTxtFilePath, 'utf8');
-        mainWindow.webContents.send('fileNameTemplate', fileNameTxtFileContent);
+        return;
     } else if (fileNameTxtFiles.length > 1) {
         fileNameTxtFiles.forEach(fileNameTxtFile => {
             const fileNameTxtFilePath = path.join(fileNameTemplateFolder, fileNameTxtFile);
@@ -66,7 +63,6 @@ function loadFiles(mainWindow) {
         // create with the default name (Certificado - {nome})
         const defaultFileName = 'Certificado - {nome}';
         createFile('fileNameTemplate.txt', defaultFileName, 'fileNameTemplate');
-        mainWindow.webContents.send('fileNameTemplate', defaultFileName);
     }
 }
 
