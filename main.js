@@ -34,7 +34,8 @@ async function createListWindow() {
 async function createOptionsWindow() {
     const optionsWindow = new BrowserWindow({
         width: 400,
-        height: 200,
+        height: 300,
+        show: false,
         webPreferences: {
             nodeIntegration: true, // enable node integration
             contextIsolation: false, // enable ipcRenderer
@@ -48,6 +49,13 @@ async function createOptionsWindow() {
         createFile('fileNameTemplate.txt', message, 'fileNameTemplate');
         optionsWindow.webContents.send('fileNameTemplate', message);
     });
+    ipcMain.on('withTelAndEmail', (event, message) => {
+        createFile('withTelAndEmail.txt', `${message}`, 'withTelAndEmail');
+        optionsWindow.webContents.send('withTelAndEmail', message);
+        mainWindow.webContents.send('withTelAndEmail', message);
+    });
+    optionsWindow.webContents.send('withTelAndEmail', getWithTelAndEmail());
+    optionsWindow.show();
 }
 
 
