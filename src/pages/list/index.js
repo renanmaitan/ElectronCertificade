@@ -1,9 +1,7 @@
 const {ipcRenderer} = require('electron');
 const lista = [];
-let withTelAndEmail;
-
 ipcRenderer.send('getList');
-console.log('getList');
+let withTelAndEmail = ipcRenderer.sendSync('getWithTelAndEmail');
 
 //ELEMENTS
 const reloadIcon = document.getElementById('reloadIcon');
@@ -21,11 +19,6 @@ ipcRenderer.on('getListResponse', (event, message) => {
     lista.push(...message);
     realodContainer.classList.remove('hidden');
     realodingContainer.classList.add('hidden');
-    displayData();
-});
-
-ipcRenderer.on('withTelAndEmail', (event, message) => {
-    withTelAndEmail = message;
     displayData();
 });
 
@@ -76,9 +69,7 @@ function deleteRow(item) {
     ipcRenderer.send('removeItemsFromList', item);
 }
 
-// Função para editar uma linha substitua por sua lógica de edição)
+// Função para editar uma linha)
 function editRow(item) {
-    console.log(`Editar: ${item.nome}, CPF: ${item.cpf}, Nascimento: ${item.birthDate}`);
+    ipcRenderer.send('editItem', item);
 }
-
-displayData();

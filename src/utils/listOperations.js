@@ -4,7 +4,7 @@ const withTelAndEmail = getWithTelAndEmail();
 
 let list = [];
 
-function addToList(name, cpf, birthDate, email = '', tel = '') {
+function addToList(name, cpf, birthDate, tel = '', email = '') {
     if (name && cpf && birthDate) {
         list.push({
             name: name,
@@ -38,14 +38,23 @@ function removeItemsFromList(items) {
     });
 }
 
-function updateItemFromList(item, name, cpf, birthDate, email = '', tel = '') {
-    const index = list.indexOf(item);
-    if (index > -1) {
-        list[index].name = name;
-        list[index].cpf = cpf;
-        list[index].birthDate = birthDate;
-        list[index].email = email;
-        list[index].tel = tel;
+function updateItemFromList(oldItem, name, cpf, birthDate,  tel = '', email = '') {
+    if (name && cpf && birthDate) {
+        const index = list.findIndex(item => item.cpf === oldItem.cpf);
+        if (index > -1) {
+            list[index] = {
+                name: name,
+                cpf: cpf,
+                birthDate: birthDate,
+                email: email,
+                tel: tel
+            };
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
     }
 }
 

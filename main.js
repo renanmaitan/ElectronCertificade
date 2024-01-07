@@ -13,6 +13,24 @@ const filesPath = __dirname;
 // main window
 let mainWindow = null;
 
+async function createEditItemWindow(item) {
+    const editItemWindow = new BrowserWindow({
+        width: 400,
+        height: 400,
+        show: false,
+        webPreferences: {
+            nodeIntegration: true, // enable node integration
+            contextIsolation: false, // enable ipcRenderer
+            enableRemoteModule: true, // enable remote
+        }
+    });
+    await editItemWindow.loadFile('src/pages/editItem/index.html');
+    editItemWindow.webContents.send('item', item);
+    editItemWindow.webContents.send('withTelAndEmail', getWithTelAndEmail());
+    editItemWindow.show();
+}
+
+
 async function createListWindow() {
     const withTelAndEmail = getWithTelAndEmail();
     const listWindow = new BrowserWindow({
@@ -28,9 +46,13 @@ async function createListWindow() {
     (withTelAndEmail && listWindow.maximize());
     await listWindow.loadFile('src/pages/list/index.html');
     ipcMain.on('reloadList', () => {
-        listWindow.webContents.reload();
+        if (listWindow && !listWindow.isDestroyed() && listWindow.webContents) {
+            listWindow.webContents.reload();
+        }
     });
-    listWindow.webContents.send('withTelAndEmail', getWithTelAndEmail());
+    ipcMain.on('editItem', (event, message) => {
+        createEditItemWindow(message);
+    });
     listWindow.show();
 }
 
@@ -54,8 +76,12 @@ async function createOptionsWindow() {
     });
     ipcMain.on('withTelAndEmail', (event, message) => {
         createFile('withTelAndEmail.txt', `${message}`, 'withTelAndEmail');
-        optionsWindow.webContents.send('withTelAndEmail', message);
-        mainWindow.webContents.send('withTelAndEmail', message);
+        if (optionsWindow && !optionsWindow.isDestroyed() && optionsWindow.webContents){
+            optionsWindow.webContents.send('withTelAndEmail', message);
+        }
+        if (mainWindow && !mainWindow.isDestroyed() && mainWindow.webContents) {
+            mainWindow.webContents.send('withTelAndEmail', message);
+        }
     });
     optionsWindow.webContents.send('withTelAndEmail', getWithTelAndEmail());
     optionsWindow.show();
@@ -113,7 +139,7 @@ async function createWindow() {
     });
 
     ipcMain.on('addToList', (event, message) => {
-        const result = addToList(message.name, message.cpf, message.birthDate);
+        const result = addToList(message.name, message.cpf, message.birthDate, message.phone, message.email);
         event.returnValue = result;
     });
 
@@ -130,7 +156,8 @@ async function createWindow() {
     });
 
     ipcMain.on('updateItemFromList', (event, message) => {
-        updateItemFromList(message.item, message.name, message.cpf, message.birthDate);
+        console.log('Telefone: ' + message.phone + '\nEmail: ' + message.email);
+        updateItemFromList(message.oldItem, message.name, message.cpf, message.birthDate, message.phone, message.email);
     });
 
     ipcMain.on('addFromPaste', (event, message) => {
@@ -178,6 +205,9 @@ async function createWindow() {
             const pdfPath = `../../output/pdfOutputs/fromPptx/${item.name}.pdf`;
             convertToPdf(pptxPath, pdfPath, 'pptx');
         });
+    });
+    ipcMain.on('getWithTelAndEmail', (event) => {
+        event.returnValue = getWithTelAndEmail();
     });
 
     mainWindow.show();
