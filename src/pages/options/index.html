@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="./styles.css">
+    <title>Configurações</title>
+</head>
+<body>
+    <div class="container">
+        <div class="fileNameContainer">
+            <p style="margin: 0;" class="title-config">Modelo de nome dos Certificados<br></p>
+            <p style="margin: 0;">Modelo atual: <strong id="fileNameLabel" style="color: aqua;"></strong></p>
+            <input type="text" id="fileNameInput">
+            <button class="btn" id="btnFileName">Salvar</button>
+        </div>
+        <div class="liga-desliga">
+            <p class="title-config">Ativar geração de atestado</p>
+            <input type="checkbox" class="liga-desliga_checkbox" id="liga-desliga">
+            <label for="liga-desliga" class="liga-desliga_botao"></label>
+        </div>
+    </div>
+    <script src="./index.js"></script>
+</body>
+</html>

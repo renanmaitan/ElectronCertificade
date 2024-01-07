@@ -4,36 +4,49 @@
 <head>
     <meta charset="UTF-8">
     <title>Electron Certificate</title>
+    <link rel="stylesheet" href="../../../node_modules/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="./styles.css" type="text/css">
 </head>
 
 <body>
     <div class="container">
         <div class="content">
+            <i class="fa fa-cog config-icon" id="btnOptions"></i>
             <h1 class="title">Electron Certificate</h1>
             <div class="group">
-                <button class="btn" id="btnWord">Gerar certificado WORD</button>
-                <button class="btn" id="btnPptx">Gerar certificado PPTX</button>
+                <div>
+                    <button class="btn" id="btnWord">Gerar certificados <strong>Word</strong></button>
+                    <div class="fileContainer">
+                        <p style="margin: 2%;">Modelo word:</p>
+                        <label for="wordTemplate" class="inputFile" id="wordLabel"></label>
+                        <input type="file" class="hidden" id="wordTemplate" accept=".docx">
+                    </div>
+                </div>
+                <div>
+                    <button class="btn" id="btnPptx">Gerar certificados <strong>PowerPoint</strong></button>
+                    <div class="fileContainer">
+                        <p style="margin: 2%;">Modelo powerpoint:</p>
+                        <label for="pptxTemplate" class="inputFile" id="pptxLabel"></label>
+                        <input type="file" class="hidden" id="pptxTemplate" accept=".pptx">
+                    </div>
+                </div>
+                <div id="tableContainer">
+                    <button class="btn" id="btnTable">Gerar <strong>Atestado</strong></button>
+                    <div class="fileContainer">
+                        <p style="margin: 2%;">Modelo atestado:</p>
+                        <label for="tableTemplate" class="inputFile" id="tableLabel"></label>
+                        <input type="file" class="hidden" id="tableTemplate" accept=".docx">
+                    </div>
+                </div>
             </div>
             <div class="group">
-                <button class="btn" id="btnList" style="height: 40%;">Ver lista</button>
-                <button class="btn" id="btnClear" style="height: 40%;">Limpar lista</button>
-                <div class="fileContainer">
-                    <p style="margin-bottom: 6%;">Modelo word</p>
-                    <label for="wordTemplate" class="inputFile" id="wordLabel"></label>
-                    <input type="file" class="hidden" id="wordTemplate" accept=".docx">
-                </div>
-                <div class="fileContainer">
-                    <p style="margin-bottom: 6%;">Modelo powerpoint</p>
-                    <label for="pptxTemplate" class="inputFile" id="pptxLabel"></label>
-                    <input type="file" class="hidden" id="pptxTemplate" accept=".pptx">
-                </div>
-                <div class="fileContainer">
-                    <p style="margin: 0;">Modelo de nome do Arquivo<br></p>
-                    <p style="margin: 0;">Modelo atual: <strong id="fileNameLabel" style="color: aqua;"></strong></p>
-                    <input type="text" id="fileNameInput">
-                    <button class="btn" id="btnFileName">Salvar</button>
-                </div>
+                <img class="imgsBtn" src="../../imgs/word_button.png" id="btnShowWordFiles">
+                <img class="imgsBtn" src="../../imgs/pdf_word_button.png" id="btnShowPdfFromWordFiles">
+                <button class="btn" id="btnList">Ver lista</button>
+                <button class="btn" id="btnClear">Limpar lista</button>
+                <img class="imgsBtn" src="../../imgs/ppx_pdf_button.png" id="btnShowPdfFromPptxFiles">
+                <img class="imgsBtn" src="../../imgs/ppx_button.png" id="btnShowPptxFiles">;
+                <img class="imgsBtn" src="../../imgs/atestado.png" id="btnShowTableFiles">
             </div>
             <div class="group" style="height: 60%;">
                 <div class="content" style="width: 40%;">
@@ -45,12 +58,16 @@
                     <input type="text" id="cpf" placeholder="CPF">
                     <label for="birthdate">Data de nascimento</label>
                     <input type="text" id="birthdate" placeholder="Data de nascimento">
+                    <label for="phone" id="phoneTitle">Telefone</label>
+                    <input type="text" id="phone" placeholder="Telefone">
+                    <label for="email" id="emailTitle">E-mail</label>
+                    <input type="text" id="email" placeholder="E-mail">
                     <button class="btn" id="btnAdd">Adicionar</button>
                 </div>
                 <div class="content" style="width: 60%;">
                     <h2>Adicionar vários itens</h2>
                     <p class="hidden" style="color: rgb(240, 52, 52); margin: 0;" id="alertMany"></p>
-                    <p>*Modelo: Nome CPF DD/MM/AAAA<br>*Exemplo: João da Silva 123.456.789-10 01/01/2000<br>*Separe os
+                    <p id="example">*Modelo: Nome CPF DD/MM/AAAA<br>*Exemplo: João da Silva 123.456.789-10 01/01/2000<br>*Separe os
                         itens por quebra de linha (ENTER)</p>
                     <textarea id="names" placeholder="Nomes"></textarea>
                     <button class="btn" id="btnAddMany">Adicionar</button>

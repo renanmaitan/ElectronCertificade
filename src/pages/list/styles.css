@@ -50,3 +50,19 @@ button:hover {
     background-color: #da190b;
     border-color: black;
 }
+
+
+.reload{
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    margin-right: 1em;
+}
+
+.icon-reload{
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}

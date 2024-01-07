@@ -5,6 +5,8 @@ const { app } = require('electron');
 const documentsFolder = app.getPath('documents');
 const appDocsFolder = path.join(documentsFolder, 'ElectronCertificate');
 
+const docsPath = path.join(__dirname, '..', '..', 'templates');
+
 function ensureDirectoryExists(directory) {
     if (!fs.existsSync(directory)) {
         fs.mkdirSync(directory, { recursive: true });
@@ -56,21 +58,34 @@ function loadFiles(mainWindow) {
     ensureDirectoryExists(fileNameTemplateFolder);
     const fileNameFiles = fs.readdirSync(fileNameTemplateFolder);
     const fileNameTxtFiles = fileNameFiles.filter(file => path.extname(file).toLowerCase() === '.txt');
-    if (fileNameTxtFiles.length === 1) {
-        const fileNameTxtFile = fileNameTxtFiles[0];
-        const fileNameTxtFilePath = path.join(fileNameTemplateFolder, fileNameTxtFile);
-        const fileNameTxtFileContent = fs.readFileSync(fileNameTxtFilePath, 'utf8');
-        mainWindow.webContents.send('fileNameTemplate', fileNameTxtFileContent);
-    } else if (fileNameTxtFiles.length > 1) {
+    if (fileNameTxtFiles.length !== 1) {
+        if (fileNameTxtFiles.length > 1) {
         fileNameTxtFiles.forEach(fileNameTxtFile => {
             const fileNameTxtFilePath = path.join(fileNameTemplateFolder, fileNameTxtFile);
             fs.unlinkSync(fileNameTxtFilePath);
         });
+        } else {
+            // create with the default name (Certificado - {nome})
+            const defaultFileName = 'Certificado - {nome}';
+            createFile('fileNameTemplate.txt', defaultFileName, 'fileNameTemplate');
+        }
+    }
+
+    const tableTemplateFolder = path.join(docsPath, 'tableTemplate');
+    ensureDirectoryExists(tableTemplateFolder);
+    const tableFiles = fs.readdirSync(tableTemplateFolder);
+    const tableDocxFiles = tableFiles.filter(file => path.extname(file).toLowerCase() === '.docx');
+    if (tableDocxFiles.length === 1) {
+        const tableDocxFile = tableDocxFiles[0];
+        const tableDocxFilePath = path.join(tableTemplateFolder, tableDocxFile);
+        mainWindow.webContents.send('tableTemplate', tableDocxFilePath);
+    } else if (tableDocxFiles.length > 1) {
+        tableDocxFiles.forEach(tableDocxFile => {
+            const tableDocxFilePath = path.join(tableTemplateFolder, tableDocxFile);
+            fs.unlinkSync(tableDocxFilePath);
+        });
     } else {
-        // create with the default name (Certificado - {nome})
-        const defaultFileName = 'Certificado - {nome}';
-        createFile('fileNameTemplate.txt', defaultFileName, 'fileNameTemplate');
-        mainWindow.webContents.send('fileNameTemplate', defaultFileName);
+        mainWindow.webContents.send('tableTemplate', '');
     }
 }
 
@@ -93,5 +108,16 @@ function createFile(fileName, fileContent, folderTargetName) {
     fs.writeFileSync(filePath, fileContent);
 }
 
+function getWithTelAndEmail() {
+    const withTelAndEmailFolder = path.join(docsPath, 'withTelAndEmail');
+    ensureDirectoryExists(withTelAndEmailFolder);
+    const withTelAndEmailFile = path.join(withTelAndEmailFolder, 'withTelAndEmail.txt');
+    if (!fs.existsSync(withTelAndEmailFile)) {
+        fs.writeFileSync(withTelAndEmailFile, 'false');
+    }
+    const withTelAndEmail = fs.readFileSync(withTelAndEmailFile, 'utf8');
+    return withTelAndEmail === 'true';
+}
 
-module.exports = { loadFiles, rewriteFile, createFile, getTemplateName };
+
+module.exports = { loadFiles, rewriteFile, createFile, getTemplateName, getWithTelAndEmail };

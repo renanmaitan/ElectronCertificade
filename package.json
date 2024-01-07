@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "docxtemplater": "^3.42.7",
+    "font-awesome": "^4.7.0",
     "pizzip": "^3.1.4"
   },
   "devDependencies": {

@@ -1,0 +1,55 @@
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+.container {
+    height: 100%;
+    width: 100%;
+    background-color: #3e3e3e;
+}
+
+input {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #fff;
+    margin: 0.5rem 0;
+    width: 80%;
+    font-size: 1rem;
+}
+
+.btn {
+    background-color: rgb(57, 135, 45);;
+    color: #fff;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 0 0.5rem;
+}
+
+.btn:hover {
+    background-color: rgb(83, 201, 65);
+    color: #fff;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.hidden {
+    display: none;
+}
