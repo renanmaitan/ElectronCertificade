@@ -125,7 +125,10 @@ async function createWindow() {
             shell.openPath(path.join(filesPath, 'output', 'pdfOutputs', 'fromPptx'));
         } else if (message === 'pdf_word') {
             shell.openPath(path.join(filesPath, 'output', 'pdfOutputs', 'fromWord'));
-        } else {
+        } else if (message === 'table') {
+            shell.openPath(path.join(filesPath, 'output', 'tableOutputs'));
+        } 
+        else {
             shell.openPath(path.join(filesPath, 'output'));
         }
     }); 

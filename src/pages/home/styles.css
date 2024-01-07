@@ -65,11 +65,13 @@ body {
     color: #fff;
 }
 
-.btn#btnWord {
+.btn#btnWord, 
+.btn#btnTable {
     background-color: rgb(78, 116, 186);
 }
 
-.btn#btnWord:hover {
+.btn#btnWord:hover, 
+.btn#btnTable:hover {
     background-color: darkgreen;
 }
 
@@ -78,14 +80,6 @@ body {
 }
 
 .btn#btnPptx:hover {
-    background-color: darkgreen;
-}
-
-.btn#btnTable {
-    background-color: rgb(193, 61, 61);
-}
-
-.btn#btnTable:hover {
     background-color: darkgreen;
 }
 
@@ -151,4 +145,16 @@ p {
     top: 4%;
     right: 3%;
     cursor: pointer;
+}
+
+.imgsBtn {
+    width: 6%;
+    margin-inline: 1rem;
+    cursor: pointer;
+    transition: 0.2s all ease-in-out;
+}
+
+.imgsBtn:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
 }

@@ -30,6 +30,7 @@ const btnShowWordFiles = document.getElementById('btnShowWordFiles');
 const btnShowPptxFiles = document.getElementById('btnShowPptxFiles');
 const btnShowPdfFromWordFiles = document.getElementById('btnShowPdfFromWordFiles');
 const btnShowPdfFromPptxFiles = document.getElementById('btnShowPdfFromPptxFiles');
+const btnShowTableFiles = document.getElementById('btnShowTableFiles');
 const example = document.getElementById('example');
 const emailTitle = document.getElementById('emailTitle');
 const phoneTitle = document.getElementById('phoneTitle');
@@ -86,6 +87,7 @@ function switchWithTelAndEmail() {
         emailInput.classList.remove('hidden');
         phoneInput.classList.remove('hidden');
         tableContainer.classList.remove('hidden');
+        btnShowTableFiles.classList.remove('hidden');
     }
     else {
         example.innerHTML = '*Modelo: Nome CPF DD/MM/AAAA<br>*Exemplo: João da Silva 123.456.789-10 01/01/2000<br>*Separe os itens por quebra de linha (ENTER)'
@@ -94,6 +96,7 @@ function switchWithTelAndEmail() {
         emailInput.classList.add('hidden');
         phoneInput.classList.add('hidden');
         tableContainer.classList.add('hidden');
+        btnShowTableFiles.classList.add('hidden');
     }
 }
 
@@ -109,6 +112,9 @@ btnShowPdfFromWordFiles.addEventListener('click', () => {
 });
 btnShowPdfFromPptxFiles.addEventListener('click', () => {
     ipcRenderer.send('showFiles', 'pdf_pptx');
+});
+btnShowTableFiles.addEventListener('click', () => {
+    ipcRenderer.send('showFiles', 'table');
 });
 btnOptions.addEventListener('click', () => {
     ipcRenderer.send('createOptionsWindow');
