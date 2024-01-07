@@ -5,7 +5,7 @@ const { app } = require('electron');
 const documentsFolder = app.getPath('documents');
 const appDocsFolder = path.join(documentsFolder, 'ElectronCertificate');
 
-const docsPath = path.join(__dirname, '..', '..', 'templates');
+const templatesPath = path.join(appDocsFolder, 'templates');
 
 function ensureDirectoryExists(directory) {
     if (!fs.existsSync(directory)) {
@@ -14,13 +14,13 @@ function ensureDirectoryExists(directory) {
 }
 
 function getTemplateName () {
-    const fileNameTemplateFolder = path.join(appDocsFolder, 'templates', 'fileNameTemplate', 'fileNameTemplate.txt');
+    const fileNameTemplateFolder = path.join(templatesPath, 'fileNameTemplate', 'fileNameTemplate.txt');
     const fileNameTemplate = fs.readFileSync(fileNameTemplateFolder, 'utf8');
     return fileNameTemplate;
 }
 
 function loadFiles(mainWindow) {
-    const wordTemplateFolder = path.join(appDocsFolder, 'templates', 'wordTemplate');
+    const wordTemplateFolder = path.join(templatesPath, 'wordTemplate');
     ensureDirectoryExists(wordTemplateFolder);
     const wordFiles = fs.readdirSync(wordTemplateFolder);
     const docxFiles = wordFiles.filter(file => path.extname(file).toLowerCase() === '.docx');
@@ -37,7 +37,7 @@ function loadFiles(mainWindow) {
         mainWindow.webContents.send('wordTemplate', '');
     }
 
-    const pptxTemplateFolder = path.join(appDocsFolder, 'templates', 'pptxTemplate');
+    const pptxTemplateFolder = path.join(templatesPath, 'pptxTemplate');
     ensureDirectoryExists(pptxTemplateFolder);
     const pptFiles = fs.readdirSync(pptxTemplateFolder);
     const pptxFiles = pptFiles.filter(file => path.extname(file).toLowerCase() === '.pptx');
@@ -54,7 +54,7 @@ function loadFiles(mainWindow) {
         mainWindow.webContents.send('pptxTemplate', '');
     }
 
-    const fileNameTemplateFolder = path.join(appDocsFolder, 'templates', 'fileNameTemplate');
+    const fileNameTemplateFolder = path.join(templatesPath, 'fileNameTemplate');
     ensureDirectoryExists(fileNameTemplateFolder);
     const fileNameFiles = fs.readdirSync(fileNameTemplateFolder);
     const fileNameTxtFiles = fileNameFiles.filter(file => path.extname(file).toLowerCase() === '.txt');
@@ -71,7 +71,7 @@ function loadFiles(mainWindow) {
         }
     }
 
-    const tableTemplateFolder = path.join(docsPath, 'tableTemplate');
+    const tableTemplateFolder = path.join(templatesPath, 'tableTemplate');
     ensureDirectoryExists(tableTemplateFolder);
     const tableFiles = fs.readdirSync(tableTemplateFolder);
     const tableDocxFiles = tableFiles.filter(file => path.extname(file).toLowerCase() === '.docx');
@@ -90,7 +90,7 @@ function loadFiles(mainWindow) {
 }
 
 function rewriteFile(filePath, folderTargetName, mainWindow) {
-    const folderTarget = path.join(appDocsFolder, 'templates', folderTargetName);
+    const folderTarget = path.join(templatesPath, folderTargetName);
     ensureDirectoryExists(folderTarget);
     const filesInFolder = fs.readdirSync(folderTarget);
     filesInFolder.forEach(file => {
@@ -102,14 +102,14 @@ function rewriteFile(filePath, folderTargetName, mainWindow) {
 }
 
 function createFile(fileName, fileContent, folderTargetName) {
-    const folderTarget = path.join(appDocsFolder, 'templates', folderTargetName);
+    const folderTarget = path.join(templatesPath, folderTargetName);
     ensureDirectoryExists(folderTarget);
     const filePath = path.join(folderTarget, fileName);
     fs.writeFileSync(filePath, fileContent);
 }
 
 function getWithTelAndEmail() {
-    const withTelAndEmailFolder = path.join(docsPath, 'withTelAndEmail');
+    const withTelAndEmailFolder = path.join(templatesPath, 'withTelAndEmail');
     ensureDirectoryExists(withTelAndEmailFolder);
     const withTelAndEmailFile = path.join(withTelAndEmailFolder, 'withTelAndEmail.txt');
     if (!fs.existsSync(withTelAndEmailFile)) {

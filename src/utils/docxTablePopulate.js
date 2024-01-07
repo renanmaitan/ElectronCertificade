@@ -6,8 +6,10 @@ const PizZip = require('pizzip');
 const fs = require('fs');
 const path = require('path');
 
-const outputsPath = path.join(__dirname, '..', '..', 'output');
-const docsPath = path.join(__dirname, '..', '..', 'templates');
+const documentsFolder = app.getPath('documents');
+const appDocsFolder = path.join(documentsFolder, 'ElectronCertificate');
+const outputsPath = path.join(appDocsFolder, 'output');
+const docsPath = path.join(appDocsFolder, 'templates');
 
 function ensureRecursiveDirectoryExistence(filePath) {
     const dirname = path.dirname(filePath);

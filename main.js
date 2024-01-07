@@ -8,7 +8,8 @@ const createDocx = require('./src/utils/docxCreate');
 const convertToPdf = require('./src/utils/convertToPdf');
 const populateTable = require('./src/utils/docxTablePopulate');
 
-const filesPath = __dirname;
+const documentsFolder = app.getPath('documents'); 
+const filesPath = path.join(documentsFolder, 'ElectronCertificate');
 
 // main window
 let mainWindow = null;
