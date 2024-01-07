@@ -5,6 +5,7 @@ const DocxTemplater = require('docxtemplater');
 const PizZip = require('pizzip');
 const fs = require('fs');
 const path = require('path');
+const { app } = require('electron');
 
 const documentsFolder = app.getPath('documents');
 const appDocsFolder = path.join(documentsFolder, 'ElectronCertificate');

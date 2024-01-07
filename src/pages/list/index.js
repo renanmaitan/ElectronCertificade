@@ -1,4 +1,4 @@
-const {ipcRenderer} = require('electron');
+const { ipcRenderer } = require('electron');
 const lista = [];
 ipcRenderer.send('getList');
 let withTelAndEmail = ipcRenderer.sendSync('getWithTelAndEmail');
@@ -7,6 +7,19 @@ let withTelAndEmail = ipcRenderer.sendSync('getWithTelAndEmail');
 const reloadIcon = document.getElementById('reloadIcon');
 const realodContainer = document.getElementById('reloadContainer');
 const realodingContainer = document.getElementById('reloadingContainer');
+const tableBody = document.getElementById('tableBody');
+
+let handleClick = (event) => {
+    const target = event.target;
+    if (target.classList.contains('editButton')) {
+        const item = JSON.parse(target.closest('tr').dataset.item);
+        editRow(item);
+    } else if (target.classList.contains('deleteButton')) {
+        const item = JSON.parse(target.closest('tr').dataset.item);
+        deleteRow(item);
+    }
+}
+tableBody.addEventListener('click', handleClick);
 
 //EVENTS
 reloadIcon.addEventListener('click', () => {
@@ -24,7 +37,6 @@ ipcRenderer.on('getListResponse', (event, message) => {
 
 // Função para exibir os dados na tabela
 function displayData() {
-    console.log(withTelAndEmail);
     if (withTelAndEmail) {
         document.getElementById('telColumn').classList.remove('hidden');
         document.getElementById('emailColumn').classList.remove('hidden');
@@ -32,29 +44,27 @@ function displayData() {
         document.getElementById('telColumn').classList.add('hidden');
         document.getElementById('emailColumn').classList.add('hidden');
     }
-
-    const tableBody = document.getElementById('tableBody');
     tableBody.innerHTML = ''; // Limpa a tabela antes de adicionar os dados
-
+    console.log(lista);
     lista.forEach(item => {
         const row = tableBody.insertRow();
+        row.dataset.item = JSON.stringify(item);
         row.insertCell().textContent = item.name;
         row.insertCell().textContent = item.cpf;
         row.insertCell().textContent = item.birthDate;
-        (withTelAndEmail? row.insertCell().textContent = item.tel : null);
-        (withTelAndEmail? row.insertCell().textContent = item.email : null);
+        (withTelAndEmail ? row.insertCell().textContent = item.tel : null);
+        (withTelAndEmail ? row.insertCell().textContent = item.email : null);
 
         const actionsCell = row.insertCell();
-        
+
         const editButton = document.createElement('button');
         editButton.textContent = 'Editar';
-        editButton.addEventListener('click', () => editRow(item));
+        editButton.classList.add('editButton');
         actionsCell.appendChild(editButton);
 
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Excluir';
         deleteButton.classList.add('deleteButton');
-        deleteButton.addEventListener('click', () => deleteRow(item));
         actionsCell.appendChild(deleteButton);
     });
 }

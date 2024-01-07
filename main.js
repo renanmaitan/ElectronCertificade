@@ -8,11 +8,13 @@ const createDocx = require('./src/utils/docxCreate');
 const convertToPdf = require('./src/utils/convertToPdf');
 const populateTable = require('./src/utils/docxTablePopulate');
 
-const documentsFolder = app.getPath('documents'); 
+const documentsFolder = app.getPath('documents');
 const filesPath = path.join(documentsFolder, 'ElectronCertificate');
 
 // main window
 let mainWindow = null;
+
+let listWindow;
 
 async function createEditItemWindow(item) {
     const editItemWindow = new BrowserWindow({
@@ -33,8 +35,13 @@ async function createEditItemWindow(item) {
 
 
 async function createListWindow() {
+    if (listWindow && !listWindow.isDestroyed()) {
+        listWindow.webContents.reload();
+        listWindow.focus();
+        return;
+    }
     const withTelAndEmail = getWithTelAndEmail();
-    const listWindow = new BrowserWindow({
+    listWindow = new BrowserWindow({
         width: 900,
         height: 500,
         show: false,
@@ -51,9 +58,10 @@ async function createListWindow() {
             listWindow.webContents.reload();
         }
     });
-    ipcMain.on('editItem', (event, message) => {
-        createEditItemWindow(message);
+    listWindow.on('close', () => {
+        listWindow.destroy();
     });
+    listWindow.webContents.openDevTools();
     listWindow.show();
 }
 
@@ -77,7 +85,7 @@ async function createOptionsWindow() {
     });
     ipcMain.on('withTelAndEmail', (event, message) => {
         createFile('withTelAndEmail.txt', `${message}`, 'withTelAndEmail');
-        if (optionsWindow && !optionsWindow.isDestroyed() && optionsWindow.webContents){
+        if (optionsWindow && !optionsWindow.isDestroyed() && optionsWindow.webContents) {
             optionsWindow.webContents.send('withTelAndEmail', message);
         }
         if (mainWindow && !mainWindow.isDestroyed() && mainWindow.webContents) {
@@ -128,11 +136,11 @@ async function createWindow() {
             shell.openPath(path.join(filesPath, 'output', 'pdfOutputs', 'fromWord'));
         } else if (message === 'table') {
             shell.openPath(path.join(filesPath, 'output', 'tableOutputs'));
-        } 
+        }
         else {
             shell.openPath(path.join(filesPath, 'output'));
         }
-    }); 
+    });
 
     ipcMain.on('createListWindow', (event, message) => {
         createListWindow();
@@ -157,11 +165,20 @@ async function createWindow() {
 
     ipcMain.on('removeItemsFromList', (event, message) => {
         removeItemsFromList(message);
+        if (listWindow && !listWindow.isDestroyed()) {
+            listWindow.webContents.reload();
+        }
     });
 
     ipcMain.on('updateItemFromList', (event, message) => {
-        console.log('Telefone: ' + message.phone + '\nEmail: ' + message.email);
         updateItemFromList(message.oldItem, message.name, message.cpf, message.birthDate, message.phone, message.email);
+        if (listWindow && !listWindow.isDestroyed()) {
+            listWindow.webContents.reload();
+        }
+    });
+
+    ipcMain.on('editItem', (event, message) => {
+        createEditItemWindow(message);
     });
 
     ipcMain.on('addFromPaste', (event, message) => {
