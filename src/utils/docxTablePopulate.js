@@ -30,6 +30,8 @@ function populateTable(data) {
     const doc = new DocxTemplater(zip);
     let renderObj = {};
     data.forEach((item, index) => {
+        // put name in uppercase
+        item.name = item.name.toUpperCase();
         Object.keys(item).forEach(key => {
             const translatedToPortugueseKey = key.replace('birthDate', 'data').replace('name', 'nome');
             renderObj = {
