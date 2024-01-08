@@ -15,8 +15,7 @@ const filesPath = path.join(documentsFolder, 'ElectronCertificate');
 // main window
 let mainWindow = null;
 let optionsWindow = null;
-
-let listWindow;
+let listWindow = null;
 
 function ensureDirectoryExists(directory) {
     if (!fs.existsSync(directory)) {
@@ -171,6 +170,9 @@ async function createWindow() {
     ipcMain.on('addToList', (event, message) => {
         const result = addToList(message.name, message.cpf, message.birthDate, message.phone, message.email);
         event.returnValue = result;
+        if (listWindow && !listWindow.isDestroyed()) {
+            listWindow.webContents.reload();
+        }
     });
 
     ipcMain.on('getList', (event, message) => {
@@ -179,6 +181,9 @@ async function createWindow() {
     });
     ipcMain.on('clearList', (event, message) => {
         clearList();
+        if (listWindow && !listWindow.isDestroyed()) {
+            listWindow.webContents.reload();
+        }
     });
 
     ipcMain.on('removeItemsFromList', (event, message) => {
@@ -202,6 +207,9 @@ async function createWindow() {
     ipcMain.on('addFromPaste', (event, message) => {
         const result = addFromPaste(message);
         event.returnValue = result;
+        if (listWindow && !listWindow.isDestroyed()) {
+            listWindow.webContents.reload();
+        }
     });
 
     ipcMain.on('createTable', (event, message) => {
