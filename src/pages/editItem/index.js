@@ -8,6 +8,42 @@ const phone = document.getElementById('phone');
 const email = document.getElementById('email');
 const btnSave = document.getElementById('btnSave');
 
+//MAKS
+//MAKS INPUTS
+cpf.addEventListener('blur', () => {
+    cpf.maxLength = 14;
+    cpf.value = cpf.value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+});
+birthDate.addEventListener('blur', () => {
+    birthDate.maxLength = 10;
+    birthDate.value = birthDate.value.replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
+});
+phone.addEventListener('blur', () => {
+    phone.maxLength = 15;
+    phone.value = phone.value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+});
+cpf.addEventListener('input', () => {
+    cpf.value = cpf.value.replace(/\D/g, '');
+});
+birthDate.addEventListener('input', () => {
+    birthDate.value = birthDate.value.replace(/\D/g, '');
+});
+phone.addEventListener('input', () => {
+    phone.value = phone.value.replace(/\D/g, '');
+});
+cpf.addEventListener('focus', () => {
+    cpf.value = cpf.value.replace(/\D/g, '');
+    cpf.maxLength = 11;
+});
+birthDate.addEventListener('focus', () => {
+    birthDate.value = birthDate.value.replace(/\D/g, '');
+    birthDate.maxLength = 8;
+});
+phone.addEventListener('focus', () => {
+    phone.value = phone.value.replace(/\D/g, '');
+    phone.maxLength = 11;
+});
+
 ipcRenderer.on('item', (event, message) => {
     document.title = 'Editar ' + message.name.split(' ')[0];
     name.value = message.name;

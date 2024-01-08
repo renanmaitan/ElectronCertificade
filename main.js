@@ -61,7 +61,6 @@ async function createListWindow() {
     listWindow.on('close', () => {
         listWindow.destroy();
     });
-    listWindow.webContents.openDevTools();
     listWindow.show();
 }
 
@@ -111,7 +110,6 @@ async function createWindow() {
     await mainWindow.loadFile('src/pages/home/index.html');
     loadFiles(mainWindow);
     mainWindow.webContents.send('withTelAndEmail', getWithTelAndEmail());
-    //mainWindow.webContents.openDevTools();
 
     ipcMain.on('wordTemplate', (event, message) => {
         rewriteFile(message, 'wordTemplate', mainWindow);

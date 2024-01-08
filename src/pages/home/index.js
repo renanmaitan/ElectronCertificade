@@ -59,12 +59,15 @@ phoneInput.addEventListener('input', () => {
     phoneInput.value = phoneInput.value.replace(/\D/g, '');
 });
 cpfInput.addEventListener('focus', () => {
+    cpfInput.value = cpfInput.value.replace(/\D/g, '');
     cpfInput.maxLength = 11;
 });
 birthDateInput.addEventListener('focus', () => {
+    birthDateInput.value = birthDateInput.value.replace(/\D/g, '');
     birthDateInput.maxLength = 8;
 });
 phoneInput.addEventListener('focus', () => {
+    phoneInput.value = phoneInput.value.replace(/\D/g, '');
     phoneInput.maxLength = 11;
 });
 
@@ -81,7 +84,7 @@ function handleChangeTableTemplate(path) {
 }
 function switchWithTelAndEmail() {
     if (withTelAndEmail) {
-        example.innerHTML = '*Modelo: Nome CPF DD/MM/AAAA<br>*Exemplo: João da Silva 123.456.789-10 01/01/2000 (14) 99999-1111 joaodasilva@email.com<br>*Separe os itens por quebra de linha (ENTER)'
+        example.innerHTML = '*Modelo: Nome CPF DD/MM/AAAA<br>*Exemplo: João da Silva 123.456.789-10 01/01/2000 14 99999-1111 joaodasilva@email.com<br>*Separe os itens por quebra de linha (ENTER)'
         emailTitle.classList.remove('hidden');
         phoneTitle.classList.remove('hidden');
         emailInput.classList.remove('hidden');
@@ -99,6 +102,86 @@ function switchWithTelAndEmail() {
         btnShowTableFiles.classList.add('hidden');
     }
 }
+function validateEmail(email) {
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
+}
+function validatePhone(phone) {
+    const re = /^\d{2} \d{5}-\d{4}$/;
+    return re.test(phone);
+}
+function validateCpf(strCPF) {
+    var sum;
+    var rest;
+    sum = 0;
+    if (strCPF == "00000000000") return false;
+
+    for (i = 1; i <= 9; i++) sum = sum + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
+    rest = (sum * 10) % 11;
+
+    if ((rest == 10) || (rest == 11)) rest = 0;
+    if (rest != parseInt(strCPF.substring(9, 10))) return false;
+
+    sum = 0;
+    for (i = 1; i <= 10; i++) sum = sum + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
+    rest = (sum * 10) % 11;
+
+    if ((rest == 10) || (rest == 11)) rest = 0;
+    if (rest != parseInt(strCPF.substring(10, 11))) return false;
+    return true;
+}
+function validateBirthDate(birthDate) {
+    const re = /\d{2}\/\d{2}\/\d{4}/;
+    return re.test(birthDate);
+}
+function validate(name, cpf, birthDate, phone, email) {
+    if (name === '' || cpf === '' || birthDate === '') {
+        return "Preencha todos os campos obrigatórios";
+    }
+    if (!validateCpf(cpf.replace(/\D/g, ''))) {
+        return "CPF inválido"
+    }
+    if (!validateBirthDate(birthDate)) {
+        return "Formato de data de nascimento inválido (DD/MM/AAAA)"
+    }
+    if (withTelAndEmail) {
+        if (phone === '' || email === '') {
+            return "Preencha todos os campos obrigatórios";
+        }
+        if (!validatePhone(phone)) {
+            return "Telefone inválido";
+        }
+        if (!validateEmail(email)) {
+            return "Email inválido";
+        }
+    }
+    return true;
+}
+function validateMany(names) {
+    const namesArray = names.split('\n');
+    for (const line of namesArray) {
+        let email, phone, birthDate, cpf, name;
+        const nameSplit = line.split(' ');
+        if (withTelAndEmail) {
+            email = nameSplit.pop();
+            const finalPhone = nameSplit.pop();
+            phone = nameSplit.pop() + ' '+ finalPhone;
+            birthDate = nameSplit.pop();
+            cpf = nameSplit.pop();
+            name = nameSplit.join(' ');
+        } else {
+            birthDate = nameSplit.pop();
+            cpf = nameSplit.pop();
+            name = nameSplit.join(' ');
+        }
+        const status = validate(name, cpf, birthDate, phone, email);
+        if (status !== true) {
+            return status + ' na linha: ' + line;
+        }
+    }
+    return true;
+}
+
 
 //EVENTS
 btnShowWordFiles.addEventListener('click', () => {
@@ -144,28 +227,41 @@ btnClear.addEventListener('click', () => {
     ipcRenderer.send('clearList');
 });
 btnAdd.addEventListener('click', () => {
-    const result = ipcRenderer.sendSync('addToList', { name: name.value, cpf: cpfInput.value, birthDate: birthDateInput.value, phone: phoneInput.value, email: emailInput.value });
-    if (result) {
-        name.value = '';
-        cpfInput.value = '';
-        birthDateInput.value = '';
-        phoneInput.value = '';
-        emailInput.value = '';
-        alert.classList.add('hidden');
+    const status = validate(name.value, cpfInput.value, birthDateInput.value, phoneInput.value.replace('(', '').replace(')', ''), emailInput.value);
+    if (status === true) {
+        const result = ipcRenderer.sendSync('addToList', { name: name.value, cpf: cpfInput.value, birthDate: birthDateInput.value, phone: phoneInput.value, email: emailInput.value });
+        if (result) {
+            name.value = '';
+            cpfInput.value = '';
+            birthDateInput.value = '';
+            phoneInput.value = '';
+            emailInput.value = '';
+            alert.classList.add('hidden');
+        }
+        else {
+            alert.classList.remove('hidden');
+        }
     }
     else {
         alert.classList.remove('hidden');
+        alert.innerHTML = '*' + status;
     }
 });
 btnAddMany.addEventListener('click', () => {
-    const result = ipcRenderer.sendSync('addFromPaste', names.value);
-    if (result.status === 200) {
-        names.value = '';
-        alertMany.classList.add('hidden');
-    }
-    else {
+    const status = validateMany(names.value);
+    if (status === true) {
+        const result = ipcRenderer.sendSync('addFromPaste', names.value);
+        if (result.status === 200) {
+            names.value = '';
+            alertMany.classList.add('hidden');
+        }
+        else {
+            alertMany.classList.remove('hidden');
+            alertMany.innerHTML = '*' + result.message;
+        }
+    } else {
         alertMany.classList.remove('hidden');
-        alertMany.innerHTML = '*' + result.message;
+        alertMany.innerHTML = '*' + status;
     }
 });
 
