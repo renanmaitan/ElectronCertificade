@@ -205,7 +205,16 @@ async function createWindow() {
     });
 
     ipcMain.on('createTable', (event, message) => {
-        populateTable(getList());
+        const status = populateTable(getList());
+        if (status === 404) {
+            dialog.showMessageBox(mainWindow, {
+                title: 'Modelo de tabela não encontrado',
+                type: 'error',
+                message: 'Nenhuma tabela gerada! Verifique o modelo de tabela nas configurações.',
+                buttons: ['OK']
+            });
+            return;
+        }
     });
 
     ipcMain.on('createDocx', (event, message) => {
@@ -222,6 +231,15 @@ async function createWindow() {
         }
         list.forEach(item => {
             const docxPath = createDocx(item.name, item.cpf, templateName);
+            if (docxPath === 404) {
+                dialog.showMessageBox(mainWindow, {
+                    title: 'Modelo de certificado não encontrado',
+                    type: 'error',
+                    message: 'Nenhum certificado gerado! Verifique o modelo de certificados nas configurações.',
+                    buttons: ['OK']
+                });
+                return;
+            }
             const pdfPath = `/output/pdfOutputs/fromWord/${item.name}.pdf`;
             convertToPdf(docxPath, pdfPath, 'docx');
         });
@@ -241,6 +259,15 @@ async function createWindow() {
         }
         list.forEach(item => {
             const pptxPath = createPptx(item.name, item.cpf, templateName);
+            if (pptxPath === 404) {
+                dialog.showMessageBox(mainWindow, {
+                    title: 'Modelo de certificado não encontrado',
+                    type: 'error',
+                    message: 'Nenhum certificado gerado! Verifique o modelo de certificados nas configurações.',
+                    buttons: ['OK']
+                });
+                return;
+            }
             const pdfPath = `/output/pdfOutputs/fromPptx/${item.name}.pdf`;
             convertToPdf(pptxPath, pdfPath, 'pptx');
         });

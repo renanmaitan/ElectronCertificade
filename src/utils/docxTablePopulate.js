@@ -23,6 +23,9 @@ function ensureRecursiveDirectoryExistence(filePath) {
 function populateTable(data) {
     const folderPath = path.join(docsPath, 'tableTemplate');
     const fileName = fs.readdirSync(folderPath)[0];
+    if (!fileName) {
+        return 404;
+    }
     const zip = new PizZip(fs.readFileSync(path.join(folderPath, fileName)));
     const doc = new DocxTemplater(zip);
     let renderObj = {};

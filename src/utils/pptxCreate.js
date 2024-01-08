@@ -22,6 +22,9 @@ const createPptx = (name, cpf, fileName) => {
     const folderPath = path.join(appDocsFolder, "/templates/pptxTemplate");
     //get the file tha has any name
     const filePath = fs.readdirSync(folderPath)[0];
+    if (!filePath) {
+        return 404;
+    }
     const content = fs.readFileSync(
         path.join(appDocsFolder, `/templates/pptxTemplate/${filePath}`),
         "binary"

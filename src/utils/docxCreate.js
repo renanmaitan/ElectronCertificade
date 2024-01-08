@@ -24,6 +24,9 @@ const createDocx = (name, cpf, fileName) => {
     const folderPath = path.join(appDocsFolder, "/templates/wordTemplate");
     //get the file tha has any name
     const filePath = fs.readdirSync(folderPath)[0];
+    if (!filePath) {
+        return 404;
+    }
     const content = fs.readFileSync(
         path.join(appDocsFolder, `/templates/wordTemplate/${filePath}`),
         "binary"

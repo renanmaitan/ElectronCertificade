@@ -3,13 +3,6 @@ const { ipcRenderer } = require('electron');
 let withTelAndEmail = false;
 
 //ELEMENTS
-
-
-
-
-
-
-
 const btnList = document.getElementById('btnList');
 const btnClear = document.getElementById('btnClear');
 const name = document.getElementById('name');
@@ -73,9 +66,6 @@ phoneInput.addEventListener('focus', () => {
 
 
 //FUNCTIONS
-
-
-
 function switchWithTelAndEmail() {
     if (withTelAndEmail) {
         example.innerHTML = '*Modelo: Nome CPF DD/MM/AAAA<br>*Exemplo: João da Silva 123.456.789-10 01/01/2000 14 99999-1111 joaodasilva@email.com<br>*Separe os itens por quebra de linha (ENTER)'
