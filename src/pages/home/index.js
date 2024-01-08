@@ -26,6 +26,8 @@ const btnShowTableFiles = document.getElementById('btnShowTableFiles');
 const example = document.getElementById('example');
 const emailTitle = document.getElementById('emailTitle');
 const phoneTitle = document.getElementById('phoneTitle');
+const btnUppercase = document.getElementById('btnUppercase');
+const btnLowercase = document.getElementById('btnLowercase');
 
 //MAKS INPUTS
 cpfInput.addEventListener('blur', () => {
@@ -166,6 +168,37 @@ function validateMany(names) {
 
 
 //EVENTS
+btnUppercase.addEventListener('click', () => { //UPPERCASE NAMES, but not email
+    names.value = names.value.split('\n').map(line => {
+        const lineSplit = line.split(' ');
+        let email;
+        if (withTelAndEmail) {
+            email = lineSplit.pop();
+        }
+        const rest = lineSplit.join(' ').toUpperCase();
+        return rest + (withTelAndEmail ? ' ' + email : '')
+    }).join('\n');
+});
+btnLowercase.addEventListener('click', () => { //LOWERCASE NAMES, but not email
+    //the first letter of each word will be uppercased
+    //if "do", "da", "dos", "das", "de" is the last word, it will be lowercased
+    names.value = names.value.split('\n').map(line => {
+        const lineSplit = line.split(' ');
+        let email;
+        if (withTelAndEmail) {
+            email = lineSplit.pop();
+        }
+        const rest = lineSplit.map(word => {
+            const lowercasedWord = word.toLowerCase();
+            if (lowercasedWord === 'do' || lowercasedWord === 'da' || lowercasedWord === 'dos' || lowercasedWord === 'das' || lowercasedWord === 'de') {
+                return lowercasedWord
+            } else {
+                return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+            }
+        }).join(' ');
+        return rest + (withTelAndEmail ? ' ' + email : '')
+    }).join('\n');
+});
 btnShowWordFiles.addEventListener('click', () => {
     ipcRenderer.send('showFiles', 'word');
 });
@@ -201,7 +234,7 @@ btnAdd.addEventListener('click', () => {
     const status = validate(name.value, cpfInput.value, birthDateInput.value, phoneInput.value.replace('(', '').replace(')', ''), emailInput.value);
     if (status === true) {
         const result = ipcRenderer.sendSync('addToList', { name: name.value, cpf: cpfInput.value, birthDate: birthDateInput.value, phone: phoneInput.value, email: emailInput.value });
-        if (result) {
+        if (result.status === 200) {
             name.value = '';
             cpfInput.value = '';
             birthDateInput.value = '';
@@ -211,6 +244,7 @@ btnAdd.addEventListener('click', () => {
         }
         else {
             alert.classList.remove('hidden');
+            alert.innerHTML = '*' + result.message;
         }
     }
     else {
