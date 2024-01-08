@@ -6,8 +6,34 @@ const fileNameInput = document.getElementById('fileNameInput');
 const fileNameLabel = document.getElementById('fileNameLabel');
 const btnFileName = document.getElementById('btnFileName');
 const ligaDesliga = document.getElementById('liga-desliga'); //checkbox
+const wordLabel = document.getElementById('wordLabel');
+const wordTemplateFile = document.getElementById('wordTemplate');
+const pptxLabel = document.getElementById('pptxLabel');
+const pptxTemplateFile = document.getElementById('pptxTemplate');
+const tableLabel = document.getElementById('tableLabel');
+const tableTemplateFile = document.getElementById('tableTemplate');
+
+//FUNCTIONS
+function handleChangeWordTemplate(path) {
+    ipcRenderer.send('wordTemplate', path);
+}
+function handleChangePptxTemplate(path) {
+    ipcRenderer.send('pptxTemplate', path);
+}
+function handleChangeTableTemplate(path) {
+    ipcRenderer.send('tableTemplate', path);
+}
 
 //EVENTS
+tableTemplateFile.addEventListener('change', (event) => {
+    handleChangeTableTemplate(event.target.files[0].path);
+});
+pptxTemplateFile.addEventListener('change', (event) => {
+    handleChangePptxTemplate(event.target.files[0].path);
+});
+wordTemplateFile.addEventListener('change', (event) => {
+    handleChangeWordTemplate(event.target.files[0].path);
+});
 btnFileName.addEventListener('click', () => {
     ipcRenderer.send('fileNameTemplate', fileNameInput.value);
     fileNameInput.value = '';
@@ -25,5 +51,33 @@ ipcRenderer.on('withTelAndEmail', (event, message) => {
         ligaDesliga.checked = true;
     } else {
         ligaDesliga.checked = false;
+    }
+});
+ipcRenderer.on('wordTemplate', (event, message) => {
+    //message is the path of the file
+    const fileName = message.split('\\').pop();
+    if (message === '') {
+        wordLabel.innerHTML = 'Selecione um arquivo';
+    }
+    else {
+        wordLabel.innerHTML = fileName;
+    }
+});
+ipcRenderer.on('pptxTemplate', (event, message) => {
+    const fileName = message.split('\\').pop();
+    if (message === '') {
+        pptxLabel.innerHTML = 'Selecione um arquivo';
+    }
+    else {
+        pptxLabel.innerHTML = fileName;
+    }
+});
+ipcRenderer.on('tableTemplate', (event, message) => {
+    const fileName = message.split('\\').pop();
+    if (message === '') {
+        tableLabel.innerHTML = 'Selecione um arquivo';
+    }
+    else {
+        tableLabel.innerHTML = fileName;
     }
 });

@@ -3,13 +3,13 @@ const { ipcRenderer } = require('electron');
 let withTelAndEmail = false;
 
 //ELEMENTS
-const wordTemplateFile = document.getElementById('wordTemplate');
-const pptxTemplateFile = document.getElementById('pptxTemplate');
-const tableTemplateFile = document.getElementById('tableTemplate');
 
-const wordLabel = document.getElementById('wordLabel');
-const pptxLabel = document.getElementById('pptxLabel');
-const tableLabel = document.getElementById('tableLabel');
+
+
+
+
+
+
 const btnList = document.getElementById('btnList');
 const btnClear = document.getElementById('btnClear');
 const name = document.getElementById('name');
@@ -73,15 +73,9 @@ phoneInput.addEventListener('focus', () => {
 
 
 //FUNCTIONS
-function handleChangeWordTemplate(path) {
-    ipcRenderer.send('wordTemplate', path);
-}
-function handleChangePptxTemplate(path) {
-    ipcRenderer.send('pptxTemplate', path);
-}
-function handleChangeTableTemplate(path) {
-    ipcRenderer.send('tableTemplate', path);
-}
+
+
+
 function switchWithTelAndEmail() {
     if (withTelAndEmail) {
         example.innerHTML = '*Modelo: Nome CPF DD/MM/AAAA<br>*Exemplo: João da Silva 123.456.789-10 01/01/2000 14 99999-1111 joaodasilva@email.com<br>*Separe os itens por quebra de linha (ENTER)'
@@ -211,15 +205,7 @@ btnPptx.addEventListener('click', () => {
 btnTable.addEventListener('click', () => {
     ipcRenderer.send('createTable');
 });
-wordTemplateFile.addEventListener('change', (event) => {
-    handleChangeWordTemplate(event.target.files[0].path);
-});
-pptxTemplateFile.addEventListener('change', (event) => {
-    handleChangePptxTemplate(event.target.files[0].path);
-});
-tableTemplateFile.addEventListener('change', (event) => {
-    handleChangeTableTemplate(event.target.files[0].path);
-});
+
 btnList.addEventListener('click', () => {
     ipcRenderer.send('createListWindow');
 });
@@ -265,36 +251,10 @@ btnAddMany.addEventListener('click', () => {
     }
 });
 
-ipcRenderer.on('wordTemplate', (event, message) => {
-    //message is the path of the file
-    const fileName = message.split('\\').pop();
-    if (message === '') {
-        wordLabel.innerHTML = 'Selecione um arquivo';
-    }
-    else {
-        wordLabel.innerHTML = fileName;
-    }
-});
 
-ipcRenderer.on('pptxTemplate', (event, message) => {
-    const fileName = message.split('\\').pop();
-    if (message === '') {
-        pptxLabel.innerHTML = 'Selecione um arquivo';
-    }
-    else {
-        pptxLabel.innerHTML = fileName;
-    }
-});
 
-ipcRenderer.on('tableTemplate', (event, message) => {
-    const fileName = message.split('\\').pop();
-    if (message === '') {
-        tableLabel.innerHTML = 'Selecione um arquivo';
-    }
-    else {
-        tableLabel.innerHTML = fileName;
-    }
-});
+
+
 
 ipcRenderer.on('withTelAndEmail', (event, message) => {
     withTelAndEmail = message;

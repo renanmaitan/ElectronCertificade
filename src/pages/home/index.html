@@ -14,30 +14,10 @@
             <i class="fa fa-cog config-icon" id="btnOptions"></i>
             <h1 class="title">Electron Certificate</h1>
             <div class="group">
-                <div>
-                    <button class="btn" id="btnWord">Gerar certificados <strong>Word</strong></button>
-                    <div class="fileContainer">
-                        <p style="margin: 2%;">Modelo word:</p>
-                        <label for="wordTemplate" class="inputFile" id="wordLabel"></label>
-                        <input type="file" class="hidden" id="wordTemplate" accept=".docx">
-                    </div>
-                </div>
-                <div>
-                    <button class="btn" id="btnPptx">Gerar certificados <strong>PowerPoint</strong></button>
-                    <div class="fileContainer">
-                        <p style="margin: 2%;">Modelo powerpoint:</p>
-                        <label for="pptxTemplate" class="inputFile" id="pptxLabel"></label>
-                        <input type="file" class="hidden" id="pptxTemplate" accept=".pptx">
-                    </div>
-                </div>
-                <div id="tableContainer">
-                    <button class="btn" id="btnTable">Gerar <strong>Atestado</strong></button>
-                    <div class="fileContainer">
-                        <p style="margin: 2%;">Modelo atestado:</p>
-                        <label for="tableTemplate" class="inputFile" id="tableLabel"></label>
-                        <input type="file" class="hidden" id="tableTemplate" accept=".docx">
-                    </div>
-                </div>
+                <button class="btn" id="btnWord">Gerar certificados <strong>Word</strong></button>
+                <button class="btn" id="btnPptx">Gerar certificados <strong>PowerPoint</strong></button>
+                <button class="btn" id="btnTable">Gerar <strong>Atestado</strong></button>
+
             </div>
             <div class="group">
                 <img class="imgsBtn" src="../../imgs/word_button.png" id="btnShowWordFiles">
@@ -67,7 +47,8 @@
                 <div class="content" style="width: 60%;">
                     <h2>Adicionar vários itens</h2>
                     <p class="hidden" style="color: rgb(240, 52, 52); margin: 0;" id="alertMany"></p>
-                    <p id="example">*Modelo: Nome CPF DD/MM/AAAA<br>*Exemplo: João da Silva 123.456.789-10 01/01/2000<br>*Separe os
+                    <p id="example">*Modelo: Nome CPF DD/MM/AAAA<br>*Exemplo: João da Silva 123.456.789-10
+                        01/01/2000<br>*Separe os
                         itens por quebra de linha (ENTER)</p>
                     <textarea id="names" placeholder="Nomes"></textarea>
                     <button class="btn" id="btnAddMany">Adicionar</button>

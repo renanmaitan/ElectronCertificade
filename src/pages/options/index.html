@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link type="text/css" rel="stylesheet" href="./styles.css">
     <title>Configurações</title>
 </head>
+
 <body>
     <div class="container">
         <div class="fileNameContainer">
@@ -19,7 +21,26 @@
             <input type="checkbox" class="liga-desliga_checkbox" id="liga-desliga">
             <label for="liga-desliga" class="liga-desliga_botao"></label>
         </div>
+        <div class="files-templates">
+            <p class="title-config">Mudar Arquivo Modelo</p>
+            <div class="fileContainer">
+                <p style="margin: 2%;" class="file-title">Modelo word:</p>
+                <label for="wordTemplate" class="inputFile" id="wordLabel"></label>
+                <input type="file" class="hidden" id="wordTemplate" accept=".docx">
+            </div>
+            <div class="fileContainer">
+                <p style="margin: 2%;" class="file-title">Modelo powerpoint:</p>
+                <label for="pptxTemplate" class="inputFile" id="pptxLabel"></label>
+                <input type="file" class="hidden" id="pptxTemplate" accept=".pptx">
+            </div>
+            <div class="fileContainer">
+                <p style="margin: 2%;" class="file-title">Modelo atestado:</p>
+                <label for="tableTemplate" class="inputFile" id="tableLabel"></label>
+                <input type="file" class="hidden" id="tableTemplate" accept=".docx">
+            </div>
+        </div>
     </div>
     <script src="./index.js"></script>
 </body>
+
 </html>

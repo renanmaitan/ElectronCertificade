@@ -17,16 +17,6 @@ body {
     background-color: #3e3e3e;
 }
 
-.fileContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    margin-top: 3%;
-    white-space: nowrap;
-}
-
 .content {
     display: flex;
     flex-direction: column;
@@ -123,19 +113,6 @@ p {
 
 .hidden {
     display: none;
-}
-
-.inputFile {
-    padding: 0.3rem;
-    border: 2px solid rgb(99, 99, 99);
-    font-size: 1rem;
-    background-color: rgb(174, 174, 174);
-    color: black;
-    cursor: pointer;
-}
-
-.inputFile:hover {
-    background-color: rgb(148, 228, 255);
 }
 
 .config-icon {

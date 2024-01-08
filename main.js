@@ -1,7 +1,8 @@
 const { app, BrowserWindow, Menu, ipcMain, dialog, shell } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
-const { loadFiles, rewriteFile, createFile, getTemplateName, getWithTelAndEmail } = require('./src/utils/fileOperations');
+const { loadFiles, rewriteFile, createFile, getTemplateName, getWithTelAndEmail, ensureDirectorys } = require('./src/utils/fileOperations');
 const { addToList, removeItemsFromList, updateItemFromList, clearList, addFromPaste, getList } = require('./src/utils/listOperations');
 const createPptx = require('./src/utils/pptxCreate');
 const createDocx = require('./src/utils/docxCreate');
@@ -13,8 +14,15 @@ const filesPath = path.join(documentsFolder, 'ElectronCertificate');
 
 // main window
 let mainWindow = null;
+let optionsWindow = null;
 
 let listWindow;
+
+function ensureDirectoryExists(directory) {
+    if (!fs.existsSync(directory)) {
+        fs.mkdirSync(directory, { recursive: true });
+    }
+}
 
 async function createEditItemWindow(item) {
     const editItemWindow = new BrowserWindow({
@@ -65,9 +73,9 @@ async function createListWindow() {
 }
 
 async function createOptionsWindow() {
-    const optionsWindow = new BrowserWindow({
-        width: 400,
-        height: 300,
+    optionsWindow = new BrowserWindow({
+        width: 500,
+        height: 520,
         show: false,
         webPreferences: {
             nodeIntegration: true, // enable node integration
@@ -76,12 +84,8 @@ async function createOptionsWindow() {
         }
     });
     await optionsWindow.loadFile('src/pages/options/index.html');
+    loadFiles(optionsWindow);
     optionsWindow.webContents.send('fileNameTemplate', getTemplateName());
-
-    ipcMain.on('fileNameTemplate', (event, message) => {
-        createFile('fileNameTemplate.txt', message, 'fileNameTemplate');
-        optionsWindow.webContents.send('fileNameTemplate', message);
-    });
     ipcMain.on('withTelAndEmail', (event, message) => {
         createFile('withTelAndEmail.txt', `${message}`, 'withTelAndEmail');
         if (optionsWindow && !optionsWindow.isDestroyed() && optionsWindow.webContents) {
@@ -108,36 +112,52 @@ async function createWindow() {
         }
     });
     await mainWindow.loadFile('src/pages/home/index.html');
-    loadFiles(mainWindow);
+    ensureDirectorys();
     mainWindow.webContents.send('withTelAndEmail', getWithTelAndEmail());
 
     ipcMain.on('wordTemplate', (event, message) => {
-        rewriteFile(message, 'wordTemplate', mainWindow);
+        rewriteFile(message, 'wordTemplate', event);
     });
 
     ipcMain.on('pptxTemplate', (event, message) => {
-        rewriteFile(message, 'pptxTemplate', mainWindow);
+        rewriteFile(message, 'pptxTemplate', event);
     });
 
     ipcMain.on('tableTemplate', (event, message) => {
-        rewriteFile(message, 'tableTemplate', mainWindow);
+        rewriteFile(message, 'tableTemplate', event);
+    });
+    ipcMain.on('fileNameTemplate', (event, message) => {
+        if (message !== '') {
+            createFile('fileNameTemplate.txt', message, 'fileNameTemplate');
+            event.reply('fileNameTemplate', message);
+        } else {
+            dialog.showMessageBox(optionsWindow, {
+                title: 'Alerta',
+                type: 'warning',
+                message: 'Nome do arquivo não pode ser vazio!',
+                buttons: ['OK']
+            });
+        }
     });
 
     ipcMain.on('showFiles', (event, message) => {
+        let dirPath;
         if (message === 'word') {
-            shell.openPath(path.join(filesPath, 'output', 'wordOutputs'));
+            dirPath = path.join(filesPath, 'output', 'wordOutputs');
         } else if (message === 'pptx') {
-            shell.openPath(path.join(filesPath, 'output', 'pptxOutputs'));
+            dirPath = path.join(filesPath, 'output', 'pptxOutputs');
         } else if (message === 'pdf_pptx') {
-            shell.openPath(path.join(filesPath, 'output', 'pdfOutputs', 'fromPptx'));
+            dirPath = path.join(filesPath, 'output', 'pdfOutputs', 'fromPptx');
         } else if (message === 'pdf_word') {
-            shell.openPath(path.join(filesPath, 'output', 'pdfOutputs', 'fromWord'));
+            dirPath = path.join(filesPath, 'output', 'pdfOutputs', 'fromWord');
         } else if (message === 'table') {
-            shell.openPath(path.join(filesPath, 'output', 'tableOutputs'));
+            dirPath = path.join(filesPath, 'output', 'tableOutputs');
         }
         else {
-            shell.openPath(path.join(filesPath, 'output'));
+            dirPath = path.join(filesPath, 'output');
         }
+        ensureDirectoryExists(dirPath);
+        shell.openPath(dirPath);
     });
 
     ipcMain.on('createListWindow', (event, message) => {

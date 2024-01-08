@@ -52,7 +52,7 @@ input {
     width: 100%;
     justify-content: center;
     align-items: center;
-    margin-top: 1.5rem;
+    margin-top: 2rem;
     text-align: center;
 }
 
@@ -109,4 +109,46 @@ input {
     font-size: 1.5rem;
     margin: 0;
     margin-bottom: 0.5rem;
+}
+
+.files-templates {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.file-title {
+    font-size: 1rem;
+    margin: 0;
+}
+
+.fileContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    white-space: nowrap;
+    margin-block: 0.2rem;
+}
+
+.inputFile {
+    padding: 0.3rem;
+    border: 2px solid rgb(99, 99, 99);
+    font-size: 1rem;
+    background-color: rgb(174, 174, 174);
+    color: black;
+    cursor: pointer;
+}
+
+.inputFile:hover {
+    background-color: rgb(148, 228, 255);
+}
+
+
+.hidden {
+    display: none;
 }
