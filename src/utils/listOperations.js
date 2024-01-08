@@ -5,6 +5,13 @@ const withTelAndEmail = getWithTelAndEmail();
 let list = [];
 
 function addToList(name, cpf, birthDate, tel = '', email = '') {
+    const index = list.findIndex(item => item.cpf === cpf);
+    if (index > -1) {
+        return {
+            status: 409,
+            message: 'Esse CPF já está cadastrado'
+        }
+    }
     if (name && cpf && birthDate) {
         list.push({
             name: name,
@@ -13,9 +20,15 @@ function addToList(name, cpf, birthDate, tel = '', email = '') {
             email: email,
             tel: tel
         });
-        return true;
+        return {
+            status: 200,
+            message: 'Adicionado com sucesso'
+        }
     } else {
-        return false;
+        return {
+            status: 400,
+            message: 'Erro de formatação'
+        }
     }
 }
 
@@ -75,6 +88,13 @@ function addFromPaste(pastedText) {
                 return {
                     status: 400,
                     message: 'Erro de formatação na linha: ' + line
+                }
+            }
+            const index = list.findIndex(item => item.cpf === cpf);
+            if (index > -1) {
+                return {
+                    status: 409,
+                    message: 'CPF já cadastrado. Linha: ' + line
                 }
             }
             tempList.push({ name, cpf, birthDate, email, tel });
