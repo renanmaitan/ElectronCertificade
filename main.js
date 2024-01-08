@@ -16,11 +16,32 @@ const filesPath = path.join(documentsFolder, 'ElectronCertificate');
 let mainWindow = null;
 let optionsWindow = null;
 let listWindow = null;
+const progressWindows = {};
 
 function ensureDirectoryExists(directory) {
     if (!fs.existsSync(directory)) {
         fs.mkdirSync(directory, { recursive: true });
     }
+}
+
+async function createProgressWindow(operationType) {
+    progressWindows[operationType] = new BrowserWindow({
+        width: 350,
+        height: 150,
+        show: false,
+        webPreferences: {
+            nodeIntegration: true, // enable node integration
+            contextIsolation: false, // enable ipcRenderer
+            enableRemoteModule: true, // enable remote
+        }
+    });
+    await progressWindows[operationType].loadFile('src/pages/progress/index.html');
+    progressWindows[operationType].webContents.send('operationType', operationType);
+    progressWindows[operationType].removeMenu();
+    progressWindows[operationType].setClosable(false);
+    progressWindows[operationType].setMinimizable(false);
+    progressWindows[operationType].setMaximizable(false);
+    progressWindows[operationType].show();
 }
 
 async function createEditItemWindow(item) {
@@ -213,19 +234,35 @@ async function createWindow() {
     });
 
     ipcMain.on('createTable', (event, message) => {
-        const status = populateTable(getList());
-        if (status === 404) {
+        const list = getList();
+        if (!list.length) {
             dialog.showMessageBox(mainWindow, {
-                title: 'Modelo de tabela não encontrado',
-                type: 'error',
-                message: 'Nenhuma tabela gerada! Verifique o modelo de tabela nas configurações.',
+                title: 'Alerta',
+                type: 'warning',
+                message: 'Nenhum atestado gerado! A lista está vazia.',
                 buttons: ['OK']
             });
             return;
         }
+        const status = populateTable(list);
+        if (status === 404) {
+            dialog.showMessageBox(mainWindow, {
+                title: 'Modelo de atestado não encontrado',
+                type: 'error',
+                message: 'Atestado não gerado! Verifique o modelo de atestado nas configurações.',
+                buttons: ['OK']
+            });
+            return;
+        }
+        dialog.showMessageBox(mainWindow, {
+            title: 'Sucesso',
+            type: 'info',
+            message: 'Atestado gerado com sucesso!',
+            buttons: ['OK']
+        });
     });
 
-    ipcMain.on('createDocx', (event, message) => {
+    ipcMain.on('createDocx', async (event, message) => {
         const templateName = getTemplateName();
         const list = getList();
         if (!list.length) {
@@ -237,7 +274,9 @@ async function createWindow() {
             });
             return;
         }
-        for (const item of list) {
+        createProgressWindow('word');
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
             const docxPath = createDocx(item.name, item.cpf, templateName);
             if (docxPath === 404) {
                 dialog.showMessageBox(mainWindow, {
@@ -249,11 +288,11 @@ async function createWindow() {
                 break;
             }
             const pdfPath = `/output/pdfOutputs/fromWord/${item.name}.pdf`;
-            convertToPdf(docxPath, pdfPath, 'docx');
+            await convertToPdf(docxPath, pdfPath, 'docx', progressWindows['word'], list.length, i + 1);
         }
     });
 
-    ipcMain.on('createPptx', (event, message) => {
+    ipcMain.on('createPptx', async (event, message) => {
         const templateName = getTemplateName();
         const list = getList();
         if (!list.length) {
@@ -265,7 +304,9 @@ async function createWindow() {
             });
             return;
         }
-        for (const item of list) {
+        createProgressWindow('powerpoint');
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
             const pptxPath = createPptx(item.name, item.cpf, templateName);
             if (pptxPath === 404) {
                 dialog.showMessageBox(mainWindow, {
@@ -277,11 +318,16 @@ async function createWindow() {
                 break;
             }
             const pdfPath = `/output/pdfOutputs/fromPptx/${item.name}.pdf`;
-            convertToPdf(pptxPath, pdfPath, 'pptx');
+            await convertToPdf(pptxPath, pdfPath, 'pptx', progressWindows['powerpoint'], list.length, i + 1);
         }
     });
     ipcMain.on('getWithTelAndEmail', (event) => {
         event.returnValue = getWithTelAndEmail();
+    });
+    ipcMain.on('progress-finished', (event, operationType) => {
+        if (progressWindows[operationType] && !progressWindows[operationType].isDestroyed()) {
+            progressWindows[operationType].setClosable(true);
+        }
     });
 
     mainWindow.show();
