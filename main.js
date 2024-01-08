@@ -229,7 +229,7 @@ async function createWindow() {
             });
             return;
         }
-        list.forEach(item => {
+        for (const item of list) {
             const docxPath = createDocx(item.name, item.cpf, templateName);
             if (docxPath === 404) {
                 dialog.showMessageBox(mainWindow, {
@@ -238,11 +238,11 @@ async function createWindow() {
                     message: 'Nenhum certificado gerado! Verifique o modelo de certificados nas configurações.',
                     buttons: ['OK']
                 });
-                return;
+                break;
             }
             const pdfPath = `/output/pdfOutputs/fromWord/${item.name}.pdf`;
             convertToPdf(docxPath, pdfPath, 'docx');
-        });
+        }
     });
 
     ipcMain.on('createPptx', (event, message) => {
@@ -257,7 +257,7 @@ async function createWindow() {
             });
             return;
         }
-        list.forEach(item => {
+        for (const item of list) {
             const pptxPath = createPptx(item.name, item.cpf, templateName);
             if (pptxPath === 404) {
                 dialog.showMessageBox(mainWindow, {
@@ -266,11 +266,11 @@ async function createWindow() {
                     message: 'Nenhum certificado gerado! Verifique o modelo de certificados nas configurações.',
                     buttons: ['OK']
                 });
-                return;
+                break;
             }
             const pdfPath = `/output/pdfOutputs/fromPptx/${item.name}.pdf`;
             convertToPdf(pptxPath, pdfPath, 'pptx');
-        });
+        }
     });
     ipcMain.on('getWithTelAndEmail', (event) => {
         event.returnValue = getWithTelAndEmail();

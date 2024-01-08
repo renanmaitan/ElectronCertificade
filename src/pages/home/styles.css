@@ -111,10 +111,6 @@ p {
     border: 2px solid cornflowerblue;
 }
 
-.hidden {
-    display: none;
-}
-
 .config-icon {
     color: white;
     font-size: 24px;
@@ -134,4 +130,8 @@ p {
 .imgsBtn:hover {
     transform: scale(1.1);
     filter: brightness(1.2);
+}
+
+.hidden {
+    display: none;
 }

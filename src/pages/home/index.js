@@ -27,7 +27,6 @@ const btnShowTableFiles = document.getElementById('btnShowTableFiles');
 const example = document.getElementById('example');
 const emailTitle = document.getElementById('emailTitle');
 const phoneTitle = document.getElementById('phoneTitle');
-const tableContainer = document.getElementById('tableContainer');
 
 //MAKS INPUTS
 cpfInput.addEventListener('blur', () => {
@@ -73,7 +72,7 @@ function switchWithTelAndEmail() {
         phoneTitle.classList.remove('hidden');
         emailInput.classList.remove('hidden');
         phoneInput.classList.remove('hidden');
-        tableContainer.classList.remove('hidden');
+        btnTable.classList.remove('hidden');
         btnShowTableFiles.classList.remove('hidden');
     }
     else {
@@ -82,7 +81,7 @@ function switchWithTelAndEmail() {
         phoneTitle.classList.add('hidden');
         emailInput.classList.add('hidden');
         phoneInput.classList.add('hidden');
-        tableContainer.classList.add('hidden');
+        btnTable.classList.add('hidden');
         btnShowTableFiles.classList.add('hidden');
     }
 }
@@ -240,12 +239,6 @@ btnAddMany.addEventListener('click', () => {
         alertMany.innerHTML = '*' + status;
     }
 });
-
-
-
-
-
-
 ipcRenderer.on('withTelAndEmail', (event, message) => {
     withTelAndEmail = message;
     switchWithTelAndEmail();

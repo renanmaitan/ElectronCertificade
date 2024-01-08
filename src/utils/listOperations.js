@@ -67,7 +67,7 @@ function addFromPaste(pastedText) {
             const parts = trimmedLine.split(' ').filter(part => part.trim() !== '');
             const email = withTelAndEmail ? parts.pop() : '';
             const finalTel = withTelAndEmail ? parts.pop() : '';
-            const tel = withTelAndEmail ? '('+parts.pop()+')' + ' ' + finalTel : '';
+            const tel = withTelAndEmail ? ('('+parts.pop()+')' + ' ' + finalTel) : '';
             const birthDate = parts.pop();
             const cpf = parts.pop();
             const name = parts.join(' ');
