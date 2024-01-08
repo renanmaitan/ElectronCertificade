@@ -57,12 +57,37 @@ button:hover {
     justify-content: right;
     align-items: center;
     margin-right: 1em;
+    width: 10%;
 }
 
 .icon-reload{
     cursor: pointer;
 }
 
+.btn {
+    background-color: #2d2226;
+    color: #fff;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-inline-start: 11.12%;
+    width: 20%;
+}
+
+.btn:hover {
+    background-color: darkgreen;
+    color: #fff;
+}
+
 .hidden {
     display: none;
+}
+
+.btnContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    white-space: nowrap;
 }

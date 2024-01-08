@@ -4,7 +4,6 @@ let withTelAndEmail = false;
 
 //ELEMENTS
 const btnList = document.getElementById('btnList');
-const btnClear = document.getElementById('btnClear');
 const name = document.getElementById('name');
 const cpfInput = document.getElementById('cpf');
 const birthDateInput = document.getElementById('birthdate');
@@ -197,9 +196,6 @@ btnTable.addEventListener('click', () => {
 
 btnList.addEventListener('click', () => {
     ipcRenderer.send('createListWindow');
-});
-btnClear.addEventListener('click', () => {
-    ipcRenderer.send('clearList');
 });
 btnAdd.addEventListener('click', () => {
     const status = validate(name.value, cpfInput.value, birthDateInput.value, phoneInput.value.replace('(', '').replace(')', ''), emailInput.value);

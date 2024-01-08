@@ -9,11 +9,16 @@
 </head>
 <body>
     <h1>Lista de Nomes</h1>
-    <div class="reload" id="reloadContainer">
-        <i class="fa fa-refresh icon-reload" id="reloadIcon"></i>
-    </div>
-    <div class="reload hidden" id="reloadingContainer">
-        <i class="fa fa-refresh fa-spin icon-reload" id="reloadingIcon"></i>
+    <div style="flex-direction: row; display: flex;">
+        <div class="btnContainer">
+            <button class="btn" id="btnClear">Limpar lista</button>
+        </div>
+        <div class="reload" id="reloadContainer">
+            <i class="fa fa-refresh icon-reload" id="reloadIcon"></i>
+        </div>
+        <div class="reload hidden" id="reloadingContainer">
+            <i class="fa fa-refresh fa-spin icon-reload" id="reloadingIcon"></i>
+        </div>
     </div>
     <table>
         <thead>

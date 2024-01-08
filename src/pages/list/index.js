@@ -8,6 +8,7 @@ const reloadIcon = document.getElementById('reloadIcon');
 const realodContainer = document.getElementById('reloadContainer');
 const realodingContainer = document.getElementById('reloadingContainer');
 const tableBody = document.getElementById('tableBody');
+const btnClear = document.getElementById('btnClear');
 
 let handleClick = (event) => {
     const target = event.target;
@@ -22,6 +23,9 @@ let handleClick = (event) => {
 tableBody.addEventListener('click', handleClick);
 
 //EVENTS
+btnClear.addEventListener('click', () => {
+    ipcRenderer.send('clearList');
+});
 reloadIcon.addEventListener('click', () => {
     realodContainer.classList.add('hidden');
     realodingContainer.classList.remove('hidden');
