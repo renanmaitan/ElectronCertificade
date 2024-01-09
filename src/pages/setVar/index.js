@@ -7,6 +7,19 @@ const companyInput = document.getElementById('companyInput');
 const addressInput = document.getElementById('addressInput');
 const btnSave = document.getElementById('btnSave');
 
+//MASKS
+dateInput.addEventListener('blur', () => {
+    dateInput.maxLength = 10;
+    dateInput.value = dateInput.value.replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
+});
+dateInput.addEventListener('input', () => {
+    dateInput.value = dateInput.value.replace(/\D/g, '');
+});
+dateInput.addEventListener('focus', () => {
+    dateInput.value = dateInput.value.replace(/\D/g, '');
+    dateInput.maxLength = 8;
+});
+
 //EVENTS
 btnSave.addEventListener('click', () => {
     ipcRenderer.send('setVar', {
