@@ -1,5 +1,9 @@
 const { ipcRenderer } = require('electron');
 
+const fileNameTemplate = ipcRenderer.sendSync('getFileNameTemplate');
+const withTelAndEmail = ipcRenderer.sendSync('getWithTelAndEmail');
+const uppercasedTable = ipcRenderer.sendSync('getUppercasedTable');
+const filesNames = ipcRenderer.sendSync('getFilesNames');
 
 //ELEMENTS
 const fileNameInput = document.getElementById('fileNameInput');
@@ -13,6 +17,7 @@ const pptxLabel = document.getElementById('pptxLabel');
 const pptxTemplateFile = document.getElementById('pptxTemplate');
 const tableLabel = document.getElementById('tableLabel');
 const tableTemplateFile = document.getElementById('tableTemplate');
+const btnSetVar = document.getElementById('btnSetVar');
 
 //FUNCTIONS
 function handleChangeWordTemplate(path) {
@@ -26,6 +31,9 @@ function handleChangeTableTemplate(path) {
 }
 
 //EVENTS
+btnSetVar.addEventListener('click', () => { //redirect to setVar page
+    location.href = '../setVar/index.html';
+});
 tableTemplateFile.addEventListener('change', (event) => {
     handleChangeTableTemplate(event.target.files[0].path);
 });
@@ -64,31 +72,11 @@ ipcRenderer.on('uppercasedTable', (event, message) => {
         ligaDesligaMaiusculo.checked = false;
     }
 });
-ipcRenderer.on('wordTemplate', (event, message) => {
-    //message is the path of the file
-    const fileName = message.split('\\').pop();
-    if (message === '') {
-        wordLabel.innerHTML = 'Selecione um arquivo';
-    }
-    else {
-        wordLabel.innerHTML = fileName;
-    }
-});
-ipcRenderer.on('pptxTemplate', (event, message) => {
-    const fileName = message.split('\\').pop();
-    if (message === '') {
-        pptxLabel.innerHTML = 'Selecione um arquivo';
-    }
-    else {
-        pptxLabel.innerHTML = fileName;
-    }
-});
-ipcRenderer.on('tableTemplate', (event, message) => {
-    const fileName = message.split('\\').pop();
-    if (message === '') {
-        tableLabel.innerHTML = 'Selecione um arquivo';
-    }
-    else {
-        tableLabel.innerHTML = fileName;
-    }
-});
+
+//INITIALIZE
+fileNameLabel.innerHTML = fileNameTemplate;
+ligaDesliga.checked = withTelAndEmail;
+ligaDesligaMaiusculo.checked = uppercasedTable;
+wordLabel.innerHTML = filesNames.docxFileName !== '' ? filesNames.docxFileName : 'Selecione um arquivo';
+pptxLabel.innerHTML = filesNames.pptxFileName !== '' ? filesNames.pptxFileName : 'Selecione um arquivo';
+tableLabel.innerHTML = filesNames.tableDocxFileName !== '' ? filesNames.tableDocxFileName : 'Selecione um arquivo';

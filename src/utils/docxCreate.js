@@ -11,6 +11,14 @@ const { app } = require('electron');
 const documentsFolder = app.getPath('documents');
 const appDocsFolder = path.join(documentsFolder, 'ElectronCertificate');
 
+function getMonthName(month) {
+    const monthNames = [
+        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ];
+    return monthNames[month - 1];
+}
+
 function ensureRecursiveDirectoryExistence(filePath) {
     const dirname = path.dirname(filePath);
     if (fs.existsSync(dirname)) {
@@ -19,7 +27,7 @@ function ensureRecursiveDirectoryExistence(filePath) {
     fs.mkdirSync(dirname, { recursive: true });
 }
 
-const createDocx = (item, handledFileName) => {
+const createDocx = (item, handledFileName, variables) => {
     // Load the docx file as binary content
     const folderPath = path.join(appDocsFolder, "/templates/wordTemplate");
     //get the file tha has any name
@@ -42,11 +50,28 @@ const createDocx = (item, handledFileName) => {
         linebreaks: true,
     });
 
-    // Render the document (Replace {first_name} by John, {last_name} by Doe, ...)
-    doc.render({
+    let renderObj = {
         nome: item.name,
-        cpf: item.cpf,
-    });
+        cpf: item.cpf
+    };
+    Object.keys(variables).forEach(key => {
+        const translatedToPortugueseKey = key.replace('date', 'data').replace('hour', 'carga-horaria').replace('company', 'empresa').replace('address', 'endereco');
+        renderObj = {
+            ...renderObj,
+            [translatedToPortugueseKey]: variables[key]
+        }
+    })
+    const dateSplit = variables.date.split('/');
+    const day = dateSplit[0];
+    const month = dateSplit[1];
+    const year = dateSplit[2];
+    const monthName = getMonthName(month);
+    renderObj = {
+        ...renderObj,
+        'data-mes-extenso': `${day} de ${monthName} de ${year}`
+    }
+    // Render the document (Replace {first_name} by John, {last_name} by Doe, ...)
+    doc.render(renderObj);
 
     // Get the zip document and generate it as a nodebuffer
     const buf = doc.getZip().generate({
@@ -57,7 +82,7 @@ const createDocx = (item, handledFileName) => {
     });
     // buf is a nodejs Buffer, you can either write it to a
     // file or res.send it with express for example.
-    
+
     const outPutPath = `/output/wordOutputs/${handledFileName}.docx`;
     ensureRecursiveDirectoryExistence(path.join(appDocsFolder, outPutPath));
     fs.writeFileSync(path.join(appDocsFolder, outPutPath), buf);

@@ -2,7 +2,7 @@ const { app, BrowserWindow, Menu, ipcMain, dialog, shell } = require('electron')
 const path = require('path');
 const fs = require('fs');
 
-const { loadFiles, rewriteFile, createFile, getTemplateName, getWithTelAndEmail, ensureDirectorys, getUppercasedTable } = require('./src/utils/fileOperations');
+const { rewriteFile, createFile, getTemplateName, getWithTelAndEmail, ensureDirectorys, getUppercasedTable, setVariables, getVariables, getFilesNames } = require('./src/utils/fileOperations');
 const { addToList, removeItemsFromList, updateItemFromList, clearList, addFromPaste, getList } = require('./src/utils/listOperations');
 const createPptx = require('./src/utils/pptxCreate');
 const createDocx = require('./src/utils/docxCreate');
@@ -95,7 +95,7 @@ async function createListWindow() {
 async function createOptionsWindow() {
     optionsWindow = new BrowserWindow({
         width: 500,
-        height: 540,
+        height: 600,
         show: false,
         webPreferences: {
             nodeIntegration: true, // enable node integration
@@ -104,8 +104,6 @@ async function createOptionsWindow() {
         }
     });
     await optionsWindow.loadFile('src/pages/options/index.html');
-    loadFiles(optionsWindow);
-    optionsWindow.webContents.send('fileNameTemplate', getTemplateName());
     ipcMain.on('withTelAndEmail', (event, message) => {
         createFile('withTelAndEmail.txt', `${message}`, 'withTelAndEmail');
         if (optionsWindow && !optionsWindow.isDestroyed() && optionsWindow.webContents) {
@@ -118,14 +116,12 @@ async function createOptionsWindow() {
             listWindow.webContents.reload();
         }
     });
-    optionsWindow.webContents.send('withTelAndEmail', getWithTelAndEmail());
     ipcMain.on('uppercasedTable', (event, message) => {
         createFile('uppercasedTable.txt', `${message}`, 'uppercasedTable');
         if (optionsWindow && !optionsWindow.isDestroyed() && optionsWindow.webContents) {
             optionsWindow.webContents.send('uppercasedTable', message);
         }
     });
-    optionsWindow.webContents.send('uppercasedTable', getUppercasedTable());
     optionsWindow.show();
 }
 
@@ -245,6 +241,7 @@ async function createWindow() {
 
     ipcMain.on('createTable', (event, message) => {
         const list = getList();
+        const variables = getVariables();
         if (!list.length) {
             dialog.showMessageBox(mainWindow, {
                 title: 'Alerta',
@@ -254,7 +251,7 @@ async function createWindow() {
             });
             return;
         }
-        const status = populateTable(list);
+        const status = populateTable(list, variables);
         if (status === 404) {
             dialog.showMessageBox(mainWindow, {
                 title: 'Modelo de atestado não encontrado',
@@ -266,7 +263,7 @@ async function createWindow() {
         }
         dialog.showMessageBox(mainWindow, {
             title: 'Sucesso',
-            type: 'none',
+            type: 'info',
             message: 'Atestado gerado com sucesso!',
             buttons: ['OK']
         });
@@ -275,6 +272,7 @@ async function createWindow() {
     ipcMain.on('createDocx', async (event, message) => {
         const templateName = getTemplateName();
         const list = getList();
+        const variables = getVariables();
         if (!list.length) {
             dialog.showMessageBox(mainWindow, {
                 title: 'Alerta',
@@ -288,7 +286,7 @@ async function createWindow() {
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
             const handledFileName = templateName.replace('{nome}', item.name).replace('{cpf}', item.cpf);
-            const docxPath = createDocx(item, handledFileName);
+            const docxPath = createDocx(item, handledFileName, variables);
             if (docxPath === 404) {
                 dialog.showMessageBox(mainWindow, {
                     title: 'Modelo de certificado não encontrado',
@@ -307,6 +305,7 @@ async function createWindow() {
     ipcMain.on('createPptx', async (event, message) => {
         const templateName = getTemplateName();
         const list = getList();
+        const variables = getVariables();
         if (!list.length) {
             dialog.showMessageBox(mainWindow, {
                 title: 'Alerta',
@@ -320,7 +319,7 @@ async function createWindow() {
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
             const handledFileName = templateName.replace('{nome}', item.name).replace('{cpf}', item.cpf);
-            const pptxPath = createPptx(item, handledFileName);
+            const pptxPath = createPptx(item, handledFileName, variables);
             if (pptxPath === 404) {
                 dialog.showMessageBox(mainWindow, {
                     title: 'Modelo de certificado não encontrado',
@@ -343,7 +342,29 @@ async function createWindow() {
             progressWindows[operationType].setClosable(true);
         }
     });
-
+    ipcMain.on('setVar', (event, args) => {
+        setVariables(args);
+        if (optionsWindow && !optionsWindow.isDestroyed() && optionsWindow.webContents) {
+            dialog.showMessageBox(optionsWindow, {
+                title: 'Sucesso',
+                type: 'info',
+                message: 'Variáveis atualizadas com sucesso!',
+                buttons: ['OK']
+            });
+        }
+    });
+    ipcMain.on('getVariables', (event) => {
+        event.returnValue = getVariables();
+    });
+    ipcMain.on('getFileNameTemplate', (event) => {
+        event.returnValue = getTemplateName();
+    });
+    ipcMain.on('getUppercasedTable', (event) => {
+        event.returnValue = getUppercasedTable();
+    });
+    ipcMain.on('getFilesNames', (event) => {
+        event.returnValue = getFilesNames();
+    });
     mainWindow.show();
 }
 
