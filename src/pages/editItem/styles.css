@@ -27,18 +27,19 @@ input {
 }
 
 .btn {
-    background-color: rgb(57, 135, 45);;
+    background-color: #2d2226;
     color: #fff;
     padding: 0.75rem 1.25rem;
     border-radius: 0.5rem;
     font-size: 1rem;
     cursor: pointer;
     margin: 0 0.5rem;
+    transition: 0.1s all ease-in-out;
 }
 
 .btn:hover {
-    background-color: rgb(83, 201, 65);
-    color: #fff;
+    filter: brightness(1.2);
+    transform: scale(1.04);;
 }
 
 .form {

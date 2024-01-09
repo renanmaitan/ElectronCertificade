@@ -32,11 +32,12 @@ p {
     font-size: 1rem;
     cursor: pointer;
     margin: 0 0.5rem;
+    transition: 0.1s all ease-in-out;
 }
 
 .btn:hover {
-    background-color: darkgreen;
-    color: #fff;
+    filter: brightness(1.2);
+    transform: scale(1.04);;
 }
 
 input {
@@ -78,7 +79,7 @@ input {
     display: inline-block;
     width: 3em;
     height: 1.5em;
-    background-color: #900;
+    background-color: rgb(193, 61, 61);
     border-radius: 1em;
 }
 
@@ -98,7 +99,7 @@ input {
 }
 
 .liga-desliga_checkbox:checked + .liga-desliga_botao::before {
-    background-color: #090;
+    background-color: rgb(78, 116, 186);
 }
 
 /* .liga-desliga_checkbox:focus + .liga-desliga_botao::before {
