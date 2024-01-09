@@ -114,6 +114,9 @@ async function createOptionsWindow() {
         if (mainWindow && !mainWindow.isDestroyed() && mainWindow.webContents) {
             mainWindow.webContents.send('withTelAndEmail', message);
         }
+        if (listWindow && !listWindow.isDestroyed() && listWindow.webContents) {
+            listWindow.webContents.reload();
+        }
     });
     optionsWindow.webContents.send('withTelAndEmail', getWithTelAndEmail());
     ipcMain.on('uppercasedTable', (event, message) => {

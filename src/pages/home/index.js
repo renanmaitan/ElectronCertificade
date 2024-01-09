@@ -123,44 +123,20 @@ function validate(name, cpf, birthDate, phone, email) {
         return "Preencha todos os campos obrigatórios";
     }
     if (!validateCpf(cpf.replace(/\D/g, ''))) {
-        return "CPF inválido"
+        return "CPF inválido: " + cpf;
     }
     if (!validateBirthDate(birthDate)) {
-        return "Formato de data de nascimento inválido (DD/MM/AAAA)"
+        return "Formato de data de nascimento inválido (DD/MM/AAAA): " + birthDate;
     }
     if (withTelAndEmail) {
         if (phone === '' || email === '') {
             return "Preencha todos os campos obrigatórios";
         }
         if (!validatePhone(phone)) {
-            return "Telefone inválido";
+            return "Telefone inválido: " + phone;
         }
         if (!validateEmail(email)) {
-            return "Email inválido";
-        }
-    }
-    return true;
-}
-function validateMany(names) {
-    const namesArray = names.split('\n');
-    for (const line of namesArray) {
-        let email, phone, birthDate, cpf, name;
-        const nameSplit = line.split(' ');
-        if (withTelAndEmail) {
-            email = nameSplit.pop();
-            const finalPhone = nameSplit.pop();
-            phone = nameSplit.pop() + ' '+ finalPhone;
-            birthDate = nameSplit.pop();
-            cpf = nameSplit.pop();
-            name = nameSplit.join(' ');
-        } else {
-            birthDate = nameSplit.pop();
-            cpf = nameSplit.pop();
-            name = nameSplit.join(' ');
-        }
-        const status = validate(name, cpf, birthDate, phone, email);
-        if (status !== true) {
-            return status + ' na linha: ' + line;
+            return "Email inválido: " + email;
         }
     }
     return true;
@@ -253,22 +229,30 @@ btnAdd.addEventListener('click', () => {
     }
 });
 btnAddMany.addEventListener('click', () => {
+    let status = true;
+    let isBreak = false;
     names.value = names.value.replace(/ +(?= )/g, '');
     names.value = names.value.split('\n').map(line => {
+        const copyLine = line;
+        if (isBreak) return line;
         const lineSplit = line.split(' ');
         let email, phone;
         if (withTelAndEmail) {
             email = lineSplit.pop();
             const finalPhone = lineSplit.pop();
-            phone = lineSplit.pop() + ' ' + finalPhone;
+            phone = (lineSplit.pop() + ' ' + finalPhone).replace(/\D/g, '').replace(/(\d{2})(\d{5})(\d{4})/, '$1 $2-$3');
         }
-        const birthDate = lineSplit.pop();
-        const cpf = lineSplit.pop();
+        const birthDate = lineSplit.pop().replace(/\D/g, '').replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
+        const cpf = lineSplit.pop().replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
         const name = lineSplit.join(' ');
-        return name + ' ' + cpf.replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') + ' ' + birthDate + (withTelAndEmail ? ' ' + phone.replace(/\D/g, '').replace(/(\d{2})(\d{5})(\d{4})/, '$1 $2-$3') + ' ' + email : '');
+        status = validate(name, cpf, birthDate, phone, email);
+        if (status !== true) {
+            isBreak = true;
+            return copyLine;
+        }
+        return name + ' ' + cpf + ' ' + birthDate + (withTelAndEmail ? ' ' + phone + ' ' + email : '');
     }).join('\n');
-    const status = validateMany(names.value);
-    if (status === true) {
+    if (status && !isBreak) {
         const result = ipcRenderer.sendSync('addFromPaste', names.value);
         if (result.status === 200) {
             names.value = '';
