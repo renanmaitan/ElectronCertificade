@@ -68,7 +68,7 @@ phoneInput.addEventListener('focus', () => {
 //FUNCTIONS
 function switchWithTelAndEmail() {
     if (withTelAndEmail) {
-        example.innerHTML = '*Modelo: Nome CPF DD/MM/AAAA<br>*Exemplo: João da Silva 123.456.789-10 01/01/2000 14 99999-1111 joaodasilva@email.com<br>*Separe os itens por quebra de linha (ENTER)'
+        example.innerHTML = '*Ordem: Nome CPF DataNascimento Telefone Email<br>*Separe os itens por quebra de linha (ENTER)'
         emailTitle.classList.remove('hidden');
         phoneTitle.classList.remove('hidden');
         emailInput.classList.remove('hidden');
@@ -77,7 +77,7 @@ function switchWithTelAndEmail() {
         btnShowTableFiles.classList.remove('hidden');
     }
     else {
-        example.innerHTML = '*Modelo: Nome CPF DD/MM/AAAA<br>*Exemplo: João da Silva 123.456.789-10 01/01/2000<br>*Separe os itens por quebra de linha (ENTER)'
+        example.innerHTML = '*Ordem: Nome CPF DataNascimento<br>*Separe os itens por quebra de linha (ENTER)'
         emailTitle.classList.add('hidden');
         phoneTitle.classList.add('hidden');
         emailInput.classList.add('hidden');
@@ -240,7 +240,11 @@ btnAddMany.addEventListener('click', () => {
         if (withTelAndEmail) {
             email = lineSplit.pop();
             const finalPhone = lineSplit.pop();
-            phone = (lineSplit.pop() + ' ' + finalPhone).replace(/\D/g, '').replace(/(\d{2})(\d{5})(\d{4})/, '$1 $2-$3');
+            if (finalPhone.length === 11) {
+                phone = finalPhone.replace(/\D/g, '').replace(/(\d{2})(\d{5})(\d{4})/, '$1 $2-$3');
+            } else {
+                phone = (lineSplit.pop() + ' ' + finalPhone).replace(/\D/g, '').replace(/(\d{2})(\d{5})(\d{4})/, '$1 $2-$3');
+            }
         }
         const birthDate = lineSplit.pop().replace(/\D/g, '').replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
         const cpf = lineSplit.pop().replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
