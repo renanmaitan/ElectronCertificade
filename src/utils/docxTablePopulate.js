@@ -32,12 +32,13 @@ function populateTable(data) {
     const doc = new DocxTemplater(zip);
     let renderObj = {};
     data.forEach((item, index) => {
-        (uppercasedTable && (item.name = item.name.toUpperCase()));
-        Object.keys(item).forEach(key => {
+        const itemCopy = {...item};
+        (uppercasedTable && (itemCopy.name = itemCopy.name.toUpperCase()));
+        Object.keys(itemCopy).forEach(key => {
             const translatedToPortugueseKey = key.replace('birthDate', 'data').replace('name', 'nome');
             renderObj = {
                 ...renderObj,
-                [translatedToPortugueseKey + (index+1)]: item[key]
+                [translatedToPortugueseKey + (index+1)]: itemCopy[key]
             }
         })
     });
