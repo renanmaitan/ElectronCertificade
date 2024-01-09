@@ -285,6 +285,7 @@ async function createWindow() {
                     message: 'Nenhum certificado gerado! Verifique o modelo de certificados nas configurações.',
                     buttons: ['OK']
                 });
+                progressWindows['word'].close();
                 break;
             }
             const pdfPath = `/output/pdfOutputs/fromWord/${item.name}.pdf`;
@@ -315,6 +316,7 @@ async function createWindow() {
                     message: 'Nenhum certificado gerado! Verifique o modelo de certificados nas configurações.',
                     buttons: ['OK']
                 });
+                progressWindows['powerpoint'].close();
                 break;
             }
             const pdfPath = `/output/pdfOutputs/fromPptx/${item.name}.pdf`;
