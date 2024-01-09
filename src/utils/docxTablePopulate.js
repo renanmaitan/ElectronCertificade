@@ -33,7 +33,6 @@ function populateTable(data) {
     let renderObj = {};
     data.forEach((item, index) => {
         (uppercasedTable && (item.name = item.name.toUpperCase()));
-        console.log(item.name);
         Object.keys(item).forEach(key => {
             const translatedToPortugueseKey = key.replace('birthDate', 'data').replace('name', 'nome');
             renderObj = {
