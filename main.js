@@ -263,7 +263,7 @@ async function createWindow() {
         }
         dialog.showMessageBox(mainWindow, {
             title: 'Sucesso',
-            type: 'info',
+            type: 'none',
             message: 'Atestado gerado com sucesso!',
             buttons: ['OK']
         });
