@@ -13,7 +13,7 @@ function ensureDirectoryExists(directory) {
     }
 }
 
-function getTemplateName () {
+function getTemplateName() {
     const fileNameTemplateFolder = path.join(templatesPath, 'fileNameTemplate', 'fileNameTemplate.txt');
     const fileNameTemplate = fs.readFileSync(fileNameTemplateFolder, 'utf8');
     return fileNameTemplate;
@@ -33,10 +33,10 @@ function ensureDirectorys() {
     const fileNameTxtFiles = fileNameFiles.filter(file => path.extname(file).toLowerCase() === '.txt');
     if (fileNameTxtFiles.length !== 1) {
         if (fileNameTxtFiles.length > 1) {
-        fileNameTxtFiles.forEach(fileNameTxtFile => {
-            const fileNameTxtFilePath = path.join(fileNameTemplateFolder, fileNameTxtFile);
-            fs.unlinkSync(fileNameTxtFilePath);
-        });
+            fileNameTxtFiles.forEach(fileNameTxtFile => {
+                const fileNameTxtFilePath = path.join(fileNameTemplateFolder, fileNameTxtFile);
+                fs.unlinkSync(fileNameTxtFilePath);
+            });
         } else {
             const defaultFileName = 'Certificado - {nome}';
             createFile('fileNameTemplate.txt', defaultFileName, 'fileNameTemplate');
@@ -49,22 +49,31 @@ function getFilesNames() {
     const wordFiles = fs.readdirSync(wordTemplateFolder);
     const docxFiles = wordFiles.filter(file => path.extname(file).toLowerCase() === '.docx');
     const docxFile = docxFiles[0];
-    const docxFilePath = path.join(wordTemplateFolder, docxFile);
-    const docxFileName = path.basename(docxFilePath);
+    let docxFileName = '';
+    if (docxFile) {
+        const docxFilePath = path.join(wordTemplateFolder, docxFile);
+        docxFileName = path.basename(docxFilePath);
+    }
 
     const pptxTemplateFolder = path.join(templatesPath, 'pptxTemplate');
     const pptFiles = fs.readdirSync(pptxTemplateFolder);
     const pptxFiles = pptFiles.filter(file => path.extname(file).toLowerCase() === '.pptx');
     const pptxFile = pptxFiles[0];
-    const pptxFilePath = path.join(pptxTemplateFolder, pptxFile);
-    const pptxFileName = path.basename(pptxFilePath);
+    let pptxFileName = '';
+    if (pptxFile) {
+        const pptxFilePath = path.join(pptxTemplateFolder, pptxFile);
+        pptxFileName = path.basename(pptxFilePath);
+    }
 
     const tableTemplateFolder = path.join(templatesPath, 'tableTemplate');
     const tableFiles = fs.readdirSync(tableTemplateFolder);
     const tableDocxFiles = tableFiles.filter(file => path.extname(file).toLowerCase() === '.docx');
     const tableDocxFile = tableDocxFiles[0];
-    const tableDocxFilePath = path.join(tableTemplateFolder, tableDocxFile);
-    const tableDocxFileName = path.basename(tableDocxFilePath);
+    let tableDocxFileName = '';
+    if (tableDocxFile) {
+        const tableDocxFilePath = path.join(tableTemplateFolder, tableDocxFile);
+        tableDocxFileName = path.basename(tableDocxFilePath);
+    }
 
     return { docxFileName, pptxFileName, tableDocxFileName };
 }
