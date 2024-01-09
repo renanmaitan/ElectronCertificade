@@ -6,6 +6,7 @@ const fileNameInput = document.getElementById('fileNameInput');
 const fileNameLabel = document.getElementById('fileNameLabel');
 const btnFileName = document.getElementById('btnFileName');
 const ligaDesliga = document.getElementById('liga-desliga'); //checkbox
+const ligaDesligaMaiusculo = document.getElementById('liga-desliga-maiusculo'); //checkbox
 const wordLabel = document.getElementById('wordLabel');
 const wordTemplateFile = document.getElementById('wordTemplate');
 const pptxLabel = document.getElementById('pptxLabel');
@@ -41,6 +42,9 @@ btnFileName.addEventListener('click', () => {
 ligaDesliga.addEventListener('click', () => {
     ipcRenderer.send('withTelAndEmail', ligaDesliga.checked);
 });
+ligaDesligaMaiusculo.addEventListener('click', () => {
+    ipcRenderer.send('uppercasedTable', ligaDesligaMaiusculo.checked);
+});
 ipcRenderer.on('fileNameTemplate', (event, message) => {
     if (message !== '') {
         fileNameLabel.innerHTML = message;
@@ -51,6 +55,13 @@ ipcRenderer.on('withTelAndEmail', (event, message) => {
         ligaDesliga.checked = true;
     } else {
         ligaDesliga.checked = false;
+    }
+});
+ipcRenderer.on('uppercasedTable', (event, message) => {
+    if (message) {
+        ligaDesligaMaiusculo.checked = true;
+    } else {
+        ligaDesligaMaiusculo.checked = false;
     }
 });
 ipcRenderer.on('wordTemplate', (event, message) => {

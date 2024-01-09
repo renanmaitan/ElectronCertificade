@@ -125,5 +125,15 @@ function getWithTelAndEmail() {
     return withTelAndEmail === 'true';
 }
 
+function getUppercasedTable() {
+    const uppercasedTableFolder = path.join(templatesPath, 'uppercasedTable');
+    ensureDirectoryExists(uppercasedTableFolder);
+    const uppercasedTableFile = path.join(uppercasedTableFolder, 'uppercasedTable.txt');
+    if (!fs.existsSync(uppercasedTableFile)) {
+        fs.writeFileSync(uppercasedTableFile, 'true');
+    }
+    const uppercasedTable = fs.readFileSync(uppercasedTableFile, 'utf8');
+    return uppercasedTable === 'true';
+}
 
-module.exports = { loadFiles, rewriteFile, createFile, getTemplateName, getWithTelAndEmail, ensureDirectorys };
+module.exports = { loadFiles, rewriteFile, createFile, getTemplateName, getWithTelAndEmail, ensureDirectorys, getUppercasedTable };

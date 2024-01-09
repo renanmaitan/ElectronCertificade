@@ -2,7 +2,7 @@ const { app, BrowserWindow, Menu, ipcMain, dialog, shell } = require('electron')
 const path = require('path');
 const fs = require('fs');
 
-const { loadFiles, rewriteFile, createFile, getTemplateName, getWithTelAndEmail, ensureDirectorys } = require('./src/utils/fileOperations');
+const { loadFiles, rewriteFile, createFile, getTemplateName, getWithTelAndEmail, ensureDirectorys, getUppercasedTable } = require('./src/utils/fileOperations');
 const { addToList, removeItemsFromList, updateItemFromList, clearList, addFromPaste, getList } = require('./src/utils/listOperations');
 const createPptx = require('./src/utils/pptxCreate');
 const createDocx = require('./src/utils/docxCreate');
@@ -95,7 +95,7 @@ async function createListWindow() {
 async function createOptionsWindow() {
     optionsWindow = new BrowserWindow({
         width: 500,
-        height: 520,
+        height: 540,
         show: false,
         webPreferences: {
             nodeIntegration: true, // enable node integration
@@ -116,6 +116,13 @@ async function createOptionsWindow() {
         }
     });
     optionsWindow.webContents.send('withTelAndEmail', getWithTelAndEmail());
+    ipcMain.on('uppercasedTable', (event, message) => {
+        createFile('uppercasedTable.txt', `${message}`, 'uppercasedTable');
+        if (optionsWindow && !optionsWindow.isDestroyed() && optionsWindow.webContents) {
+            optionsWindow.webContents.send('uppercasedTable', message);
+        }
+    });
+    optionsWindow.webContents.send('uppercasedTable', getUppercasedTable());
     optionsWindow.show();
 }
 

@@ -16,10 +16,20 @@
             <input type="text" id="fileNameInput">
             <button class="btn" id="btnFileName">Salvar</button>
         </div>
-        <div class="liga-desliga">
-            <p class="title-config">Ativar geração de atestado</p>
-            <input type="checkbox" class="liga-desliga_checkbox" id="liga-desliga">
-            <label for="liga-desliga" class="liga-desliga_botao"></label>
+        <div class="config-atestado-container">
+            <p class="title-config">Configurações do atestado</p>
+            <div class="config-atestado">
+                <div class="liga-desliga">
+                    <p class="config-subtitle">Ativar geração de atestado</p>
+                    <input type="checkbox" class="liga-desliga_checkbox" id="liga-desliga">
+                    <label for="liga-desliga" class="liga-desliga_botao"></label>
+                </div>
+                <div class="liga-desliga">
+                    <p class="config-subtitle">Gerar nomes em maiúsculo</p>
+                    <input type="checkbox" class="liga-desliga_checkbox" id="liga-desliga-maiusculo">
+                    <label for="liga-desliga-maiusculo" class="liga-desliga_botao"></label>
+                </div>
+            </div>
         </div>
         <div class="files-templates">
             <p class="title-config">Mudar Arquivo Modelo</p>

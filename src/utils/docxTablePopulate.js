@@ -6,6 +6,7 @@ const PizZip = require('pizzip');
 const fs = require('fs');
 const path = require('path');
 const { app } = require('electron');
+const { getUppercasedTable } = require('./fileOperations');
 
 const documentsFolder = app.getPath('documents');
 const appDocsFolder = path.join(documentsFolder, 'ElectronCertificate');
@@ -21,6 +22,7 @@ function ensureRecursiveDirectoryExistence(filePath) {
 }
 
 function populateTable(data) {
+    const uppercasedTable = getUppercasedTable();
     const folderPath = path.join(docsPath, 'tableTemplate');
     const fileName = fs.readdirSync(folderPath)[0];
     if (!fileName) {
@@ -30,8 +32,8 @@ function populateTable(data) {
     const doc = new DocxTemplater(zip);
     let renderObj = {};
     data.forEach((item, index) => {
-        // put name in uppercase
-        item.name = item.name.toUpperCase();
+        (uppercasedTable && (item.name = item.name.toUpperCase()));
+        console.log(item.name);
         Object.keys(item).forEach(key => {
             const translatedToPortugueseKey = key.replace('birthDate', 'data').replace('name', 'nome');
             renderObj = {

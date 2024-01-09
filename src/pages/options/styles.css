@@ -49,12 +49,37 @@ input {
     font-size: 1rem;
 }
 
-.liga-desliga {
-    width: 100%;
+.config-atestado-container {
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 2rem;
     text-align: center;
+    margin-top: 2rem;
+    width: 100%;
+}
+
+.config-atestado {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.config-subtitle {
+    font-size: 1rem;
+    margin: 0;
+    margin-bottom: 0.3rem;
+}
+
+.liga-desliga {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-inline: 1rem;
 }
 
 .liga-desliga_checkbox {
