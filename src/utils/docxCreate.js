@@ -19,7 +19,7 @@ function ensureRecursiveDirectoryExistence(filePath) {
     fs.mkdirSync(dirname, { recursive: true });
 }
 
-const createDocx = (name, cpf, fileName) => {
+const createDocx = (item, handledFileName) => {
     // Load the docx file as binary content
     const folderPath = path.join(appDocsFolder, "/templates/wordTemplate");
     //get the file tha has any name
@@ -44,8 +44,8 @@ const createDocx = (name, cpf, fileName) => {
 
     // Render the document (Replace {first_name} by John, {last_name} by Doe, ...)
     doc.render({
-        nome: name,
-        cpf: cpf,
+        nome: item.name,
+        cpf: item.cpf,
     });
 
     // Get the zip document and generate it as a nodebuffer
@@ -57,7 +57,7 @@ const createDocx = (name, cpf, fileName) => {
     });
     // buf is a nodejs Buffer, you can either write it to a
     // file or res.send it with express for example.
-    const handledFileName = fileName.replace('{nome}', name).replace('{cpf}', cpf);
+    
     const outPutPath = `/output/wordOutputs/${handledFileName}.docx`;
     ensureRecursiveDirectoryExistence(path.join(appDocsFolder, outPutPath));
     fs.writeFileSync(path.join(appDocsFolder, outPutPath), buf);

@@ -277,7 +277,8 @@ async function createWindow() {
         createProgressWindow('word');
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            const docxPath = createDocx(item.name, item.cpf, templateName);
+            const handledFileName = templateName.replace('{nome}', item.name).replace('{cpf}', item.cpf);
+            const docxPath = createDocx(item, handledFileName);
             if (docxPath === 404) {
                 dialog.showMessageBox(mainWindow, {
                     title: 'Modelo de certificado não encontrado',
@@ -288,7 +289,7 @@ async function createWindow() {
                 progressWindows['word'].close();
                 break;
             }
-            const pdfPath = `/output/pdfOutputs/fromWord/${item.name}.pdf`;
+            const pdfPath = `/output/pdfOutputs/fromWord/${handledFileName}.pdf`;
             await convertToPdf(docxPath, pdfPath, 'docx', progressWindows['word'], list.length, i + 1);
         }
     });
@@ -308,7 +309,8 @@ async function createWindow() {
         createProgressWindow('powerpoint');
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            const pptxPath = createPptx(item.name, item.cpf, templateName);
+            const handledFileName = templateName.replace('{nome}', item.name).replace('{cpf}', item.cpf);
+            const pptxPath = createPptx(item, handledFileName);
             if (pptxPath === 404) {
                 dialog.showMessageBox(mainWindow, {
                     title: 'Modelo de certificado não encontrado',
@@ -319,7 +321,7 @@ async function createWindow() {
                 progressWindows['powerpoint'].close();
                 break;
             }
-            const pdfPath = `/output/pdfOutputs/fromPptx/${item.name}.pdf`;
+            const pdfPath = `/output/pdfOutputs/fromPptx/${handledFileName}.pdf`;
             await convertToPdf(pptxPath, pdfPath, 'pptx', progressWindows['powerpoint'], list.length, i + 1);
         }
     });

@@ -26,7 +26,7 @@ function executeCommand(command) {
 async function convertToPdf(inputFile, outputFile, type, progressWindow, length, count) {
     inputFile = path.join(appDocsFolder, inputFile);
     outputFile = path.join(appDocsFolder, outputFile);
-    const converterPath = path.join(appPath, '..', 'converter.exe');
+    const converterPath = path.join(appPath, 'converter.exe');
     const command = `"${converterPath}" "${inputFile}" "${outputFile}" "${type}"`;
     try {
         await executeCommand(command);
