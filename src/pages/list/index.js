@@ -56,7 +56,9 @@ function displayData() {
         row.insertCell().textContent = item.name;
         row.insertCell().textContent = item.cpf;
         row.insertCell().textContent = item.birthDate;
-        (withTelAndEmail ? row.insertCell().textContent = item.tel : null);
+        let telSplit = item.tel.split(' ');
+        let tel = '(' + telSplit[0] + ')' + ' ' + telSplit[1];
+        (withTelAndEmail ? row.insertCell().textContent = tel : null);
         (withTelAndEmail ? row.insertCell().textContent = item.email : null);
 
         const actionsCell = row.insertCell();

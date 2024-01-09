@@ -233,7 +233,7 @@ btnList.addEventListener('click', () => {
 btnAdd.addEventListener('click', () => {
     const status = validate(name.value, cpfInput.value, birthDateInput.value, phoneInput.value.replace('(', '').replace(')', ''), emailInput.value);
     if (status === true) {
-        const result = ipcRenderer.sendSync('addToList', { name: name.value, cpf: cpfInput.value, birthDate: birthDateInput.value, phone: phoneInput.value, email: emailInput.value });
+        const result = ipcRenderer.sendSync('addToList', { name: name.value, cpf: cpfInput.value, birthDate: birthDateInput.value, phone: phoneInput.value.replace('(', '').replace(')', ''), email: emailInput.value });
         if (result.status === 200) {
             name.value = '';
             cpfInput.value = '';
@@ -253,6 +253,20 @@ btnAdd.addEventListener('click', () => {
     }
 });
 btnAddMany.addEventListener('click', () => {
+    names.value = names.value.replace(/ +(?= )/g, '');
+    names.value = names.value.split('\n').map(line => {
+        const lineSplit = line.split(' ');
+        let email, phone;
+        if (withTelAndEmail) {
+            email = lineSplit.pop();
+            const finalPhone = lineSplit.pop();
+            phone = lineSplit.pop() + ' ' + finalPhone;
+        }
+        const birthDate = lineSplit.pop();
+        const cpf = lineSplit.pop();
+        const name = lineSplit.join(' ');
+        return name + ' ' + cpf.replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') + ' ' + birthDate + (withTelAndEmail ? ' ' + phone.replace(/\D/g, '').replace(/(\d{2})(\d{5})(\d{4})/, '$1 $2-$3') + ' ' + email : '');
+    }).join('\n');
     const status = validateMany(names.value);
     if (status === true) {
         const result = ipcRenderer.sendSync('addFromPaste', names.value);
