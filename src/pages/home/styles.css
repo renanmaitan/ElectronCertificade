@@ -138,6 +138,14 @@ p {
     filter: brightness(1.2);
 }
 
+.poweredby {
+    position: fixed;
+    bottom: 0;
+    right: 2%;
+    color: #c4c4c4;
+    font-size: 0.8rem;
+}
+
 .hidden {
     display: none;
 }
