@@ -368,6 +368,13 @@ async function createWindow() {
     mainWindow.show();
 }
 
+// close
+app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
+});
+
 // menu
 Menu.setApplicationMenu(null);
 

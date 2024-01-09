@@ -72,6 +72,34 @@ ipcRenderer.on('uppercasedTable', (event, message) => {
         ligaDesligaMaiusculo.checked = false;
     }
 });
+ipcRenderer.on('wordTemplate', (event, message) => {
+    //message is the path of the file
+    const fileName = message.split('\\').pop();
+    if (message === '') {
+        wordLabel.innerHTML = 'Selecione um arquivo';
+    }
+    else {
+        wordLabel.innerHTML = fileName;
+    }
+});
+ipcRenderer.on('pptxTemplate', (event, message) => {
+    const fileName = message.split('\\').pop();
+    if (message === '') {
+        pptxLabel.innerHTML = 'Selecione um arquivo';
+    }
+    else {
+        pptxLabel.innerHTML = fileName;
+    }
+});
+ipcRenderer.on('tableTemplate', (event, message) => {
+    const fileName = message.split('\\').pop();
+    if (message === '') {
+        tableLabel.innerHTML = 'Selecione um arquivo';
+    }
+    else {
+        tableLabel.innerHTML = fileName;
+    }
+});
 
 //INITIALIZE
 fileNameLabel.innerHTML = fileNameTemplate;
