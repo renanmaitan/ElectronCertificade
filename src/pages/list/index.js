@@ -44,18 +44,19 @@ function displayData() {
     if (withTelAndEmail) {
         document.getElementById('telColumn').classList.remove('hidden');
         document.getElementById('emailColumn').classList.remove('hidden');
+        document.getElementById('birthDateColumn').classList.remove('hidden');
     } else {
         document.getElementById('telColumn').classList.add('hidden');
         document.getElementById('emailColumn').classList.add('hidden');
+        document.getElementById('birthDateColumn').classList.add('hidden');
     }
     tableBody.innerHTML = ''; // Limpa a tabela antes de adicionar os dados
-    console.log(lista);
     lista.forEach(item => {
         const row = tableBody.insertRow();
         row.dataset.item = JSON.stringify(item);
         row.insertCell().textContent = item.name;
         row.insertCell().textContent = item.cpf;
-        row.insertCell().textContent = item.birthDate;
+        (withTelAndEmail? row.insertCell().textContent = item.birthDate : null);
         let telSplit = item.tel.split(' ');
         let tel = '(' + telSplit[0] + ')' + ' ' + telSplit[1];
         (withTelAndEmail ? row.insertCell().textContent = tel : null);

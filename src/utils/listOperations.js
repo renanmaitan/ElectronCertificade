@@ -1,7 +1,5 @@
 const { getWithTelAndEmail } = require('./fileOperations');
 
-const withTelAndEmail = getWithTelAndEmail();
-
 let list = [];
 
 function addToList(name, cpf, birthDate, tel = '', email = '') {
@@ -72,6 +70,7 @@ function updateItemFromList(oldItem, name, cpf, birthDate,  tel = '', email = ''
 }
 
 function addFromPaste(pastedText) {
+    const withTelAndEmail = getWithTelAndEmail();
     const lines = pastedText.split('\n');
     const tempList = [];
     for (const line of lines) {
@@ -81,10 +80,10 @@ function addFromPaste(pastedText) {
             const email = withTelAndEmail ? parts.pop() : '';
             const finalTel = withTelAndEmail ? parts.pop() : '';
             const tel = withTelAndEmail ? (parts.pop() + ' ' + finalTel) : '';
-            const birthDate = parts.pop();
+            const birthDate = withTelAndEmail? parts.pop() : '';
             const cpf = parts.pop();
             const name = parts.join(' ');
-            if (!name || !cpf || !birthDate || (withTelAndEmail && (!email || !tel))) {
+            if (!name || !cpf || (withTelAndEmail && (!email || !tel || !birthDate))) {
                 return {
                     status: 400,
                     message: 'Erro de formatação na linha: ' + line

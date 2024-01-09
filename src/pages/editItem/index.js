@@ -68,6 +68,7 @@ ipcRenderer.on('item', (event, message) => {
 ipcRenderer.on('withTelAndEmail', (event, message) => {
     if (message) {
         phone.classList.remove('hidden');
-        email.classList.remove('hidden');       
+        email.classList.remove('hidden');
+        birthDate.classList.remove('hidden');     
     }
 });

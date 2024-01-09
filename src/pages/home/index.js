@@ -28,6 +28,7 @@ const emailTitle = document.getElementById('emailTitle');
 const phoneTitle = document.getElementById('phoneTitle');
 const btnUppercase = document.getElementById('btnUppercase');
 const btnLowercase = document.getElementById('btnLowercase');
+const birthDateTitle = document.getElementById('birthDateTitle');
 
 //MAKS INPUTS
 cpfInput.addEventListener('blur', () => {
@@ -75,15 +76,19 @@ function switchWithTelAndEmail() {
         phoneInput.classList.remove('hidden');
         btnTable.classList.remove('hidden');
         btnShowTableFiles.classList.remove('hidden');
+        birthDateInput.classList.remove('hidden');
+        birthDateTitle.classList.remove('hidden');
     }
     else {
-        example.innerHTML = '*Ordem: Nome CPF DataNascimento<br>*Separe os itens por quebra de linha (ENTER)'
+        example.innerHTML = '*Ordem: Nome CPF<br>*Separe os itens por quebra de linha (ENTER)'
         emailTitle.classList.add('hidden');
         phoneTitle.classList.add('hidden');
         emailInput.classList.add('hidden');
         phoneInput.classList.add('hidden');
         btnTable.classList.add('hidden');
         btnShowTableFiles.classList.add('hidden');
+        birthDateInput.classList.add('hidden');
+        birthDateTitle.classList.add('hidden');
     }
 }
 function validateEmail(email) {
@@ -119,18 +124,18 @@ function validateBirthDate(birthDate) {
     return re.test(birthDate);
 }
 function validate(name, cpf, birthDate, phone, email) {
-    if (name === '' || cpf === '' || birthDate === '') {
+    if (name === '' || cpf === '') {
         return "Preencha todos os campos obrigatórios";
     }
     if (!validateCpf(cpf.replace(/\D/g, ''))) {
         return "CPF inválido: " + cpf;
     }
-    if (!validateBirthDate(birthDate)) {
-        return "Formato de data de nascimento inválido (DD/MM/AAAA): " + birthDate;
-    }
     if (withTelAndEmail) {
-        if (phone === '' || email === '') {
+        if (phone === '' || email === '' || birthDate === '') {
             return "Preencha todos os campos obrigatórios";
+        }
+        if (!validateBirthDate(birthDate)) {
+            return "Formato de data de nascimento inválido (DD/MM/AAAA): " + birthDate;
         }
         if (!validatePhone(phone)) {
             return "Telefone inválido: " + phone;
@@ -229,14 +234,16 @@ btnAdd.addEventListener('click', () => {
     }
 });
 btnAddMany.addEventListener('click', () => {
+    console.log(withTelAndEmail)
     let status = true;
     let isBreak = false;
-    names.value = names.value.replace(/ +(?= )/g, '');
+    names.value = names.value.replace(/ +(?= )/g, '').trim();
     names.value = names.value.split('\n').map(line => {
+        line = line.trim();
         const copyLine = line;
         if (isBreak) return line;
         const lineSplit = line.split(' ');
-        let email, phone;
+        let email, phone, birthDate;
         if (withTelAndEmail) {
             email = lineSplit.pop();
             const finalPhone = lineSplit.pop();
@@ -245,16 +252,17 @@ btnAddMany.addEventListener('click', () => {
             } else {
                 phone = (lineSplit.pop() + ' ' + finalPhone).replace(/\D/g, '').replace(/(\d{2})(\d{5})(\d{4})/, '$1 $2-$3');
             }
+            birthDate = lineSplit.pop().replace(/\D/g, '').replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
         }
-        const birthDate = lineSplit.pop().replace(/\D/g, '').replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
         const cpf = lineSplit.pop().replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
         const name = lineSplit.join(' ');
+        console.log(name, cpf, birthDate, phone, email)
         status = validate(name, cpf, birthDate, phone, email);
         if (status !== true) {
             isBreak = true;
             return copyLine;
         }
-        return name + ' ' + cpf + ' ' + birthDate + (withTelAndEmail ? ' ' + phone + ' ' + email : '');
+        return name + ' ' + cpf + ' ' + (withTelAndEmail ? birthDate + ' ' + phone + ' ' + email : '')
     }).join('\n');
     if (status && !isBreak) {
         const result = ipcRenderer.sendSync('addFromPaste', names.value);
