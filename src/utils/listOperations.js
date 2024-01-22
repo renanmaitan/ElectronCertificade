@@ -2,7 +2,7 @@ const { getWithTelAndEmail } = require('./fileOperations');
 
 let list = [];
 
-function addToList(name, cpf, birthDate, tel = '', email = '') {
+function addToList(name, cpf, birthDate= '', tel = '', email = '') {
     const index = list.findIndex(item => item.cpf === cpf);
     if (index > -1) {
         return {
@@ -10,7 +10,7 @@ function addToList(name, cpf, birthDate, tel = '', email = '') {
             message: 'Esse CPF já está cadastrado'
         }
     }
-    if (name && cpf && birthDate) {
+    if (name && cpf) {
         list.push({
             name: name,
             cpf: cpf,
@@ -49,8 +49,8 @@ function removeItemsFromList(items) {
     });
 }
 
-function updateItemFromList(oldItem, name, cpf, birthDate,  tel = '', email = '') {
-    if (name && cpf && birthDate) {
+function updateItemFromList(oldItem, name, cpf, birthDate= '',  tel = '', email = '') {
+    if (name && cpf) {
         const index = list.findIndex(item => item.cpf === oldItem.cpf);
         if (index > -1) {
             list[index] = {

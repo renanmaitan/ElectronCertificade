@@ -52,7 +52,7 @@ function populateTable(data, variables) {
         })
     });
     Object.keys(variables).forEach(key => {
-        const translatedToPortugueseKey = key.replace('date', 'data').replace('hour', 'carga-horaria').replace('company', 'empresa').replace('address', 'endereco');
+        const translatedToPortugueseKey = key.replace('date', 'data').replace('hour', 'carga-horária').replace('company', 'empresa').replace('address', 'endereço');
         renderObj = {
             ...renderObj,
             [translatedToPortugueseKey]: variables[key]
@@ -65,7 +65,7 @@ function populateTable(data, variables) {
     const monthName = getMonthName(month);
     renderObj = {
         ...renderObj,
-        'data-mes-extenso': `${day} de ${monthName} de ${year}`
+        'data-mês-extenso': `${day} de ${monthName} de ${year}`
     }
     doc.render(renderObj);
     const buf = doc.getZip().generate({type: 'nodebuffer'});

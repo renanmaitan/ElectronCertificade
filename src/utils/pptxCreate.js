@@ -25,7 +25,7 @@ function ensureRecursiveDirectoryExistence(filePath) {
     fs.mkdirSync(dirname, { recursive: true });
 }
 
-const createPptx = (item, handledFileName) => {
+const createPptx = (item, handledFileName, variables) => {
     // Load the pptx file as binary content
     const folderPath = path.join(appDocsFolder, "/templates/pptxTemplate");
     //get the file tha has any name
@@ -52,7 +52,7 @@ const createPptx = (item, handledFileName) => {
         cpf: item.cpf
     };
     Object.keys(variables).forEach(key => {
-        const translatedToPortugueseKey = key.replace('date', 'data').replace('hour', 'carga-horaria').replace('company', 'empresa').replace('address', 'endereco');
+        const translatedToPortugueseKey = key.replace('date', 'data').replace('hour', 'carga-horária').replace('company', 'empresa').replace('address', 'endereço');
         renderObj = {
             ...renderObj,
             [translatedToPortugueseKey]: variables[key]
@@ -65,7 +65,7 @@ const createPptx = (item, handledFileName) => {
     const monthName = getMonthName(month);
     renderObj = {
         ...renderObj,
-        'data-mes-extenso': `${day} de ${monthName} de ${year}`
+        'data-mês-extenso': `${day} de ${monthName} de ${year}`
     }
     // Render the document (Replace {first_name} by John, {last_name} by Doe, ...)
     doc.render(renderObj);

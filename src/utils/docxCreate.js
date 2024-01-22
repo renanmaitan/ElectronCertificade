@@ -55,7 +55,7 @@ const createDocx = (item, handledFileName, variables) => {
         cpf: item.cpf
     };
     Object.keys(variables).forEach(key => {
-        const translatedToPortugueseKey = key.replace('date', 'data').replace('hour', 'carga-horaria').replace('company', 'empresa').replace('address', 'endereco');
+        const translatedToPortugueseKey = key.replace('date', 'data').replace('hour', 'carga-horária').replace('company', 'empresa').replace('address', 'endereço');
         renderObj = {
             ...renderObj,
             [translatedToPortugueseKey]: variables[key]
@@ -68,7 +68,7 @@ const createDocx = (item, handledFileName, variables) => {
     const monthName = getMonthName(month);
     renderObj = {
         ...renderObj,
-        'data-mes-extenso': `${day} de ${monthName} de ${year}`
+        'data-mês-extenso': `${day} de ${monthName} de ${year}`
     }
     // Render the document (Replace {first_name} by John, {last_name} by Doe, ...)
     doc.render(renderObj);

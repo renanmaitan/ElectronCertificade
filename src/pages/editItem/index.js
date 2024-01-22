@@ -49,7 +49,7 @@ ipcRenderer.on('item', (event, message) => {
     name.value = message.name;
     cpf.value = message.cpf;
     birthDate.value = message.birthDate;
-    phone.value = message.tel;
+    phone.value = '('+ message.tel.split(' ')[0] +') '+ message.tel.split(' ')[1];
     email.value = message.email;
     btnSave.removeEventListener('click', () => {});
     btnSave.addEventListener('click', () => {
@@ -58,7 +58,7 @@ ipcRenderer.on('item', (event, message) => {
             name: name.value,
             cpf: cpf.value,
             birthDate: birthDate.value,
-            phone: phone.value,
+            phone: phone.value.replace('(', '').replace(')', ''),
             email: email.value
         });
         window.close();
