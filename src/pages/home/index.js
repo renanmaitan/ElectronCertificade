@@ -234,10 +234,10 @@ btnAdd.addEventListener('click', () => {
     }
 });
 btnAddMany.addEventListener('click', () => {
-    console.log(withTelAndEmail)
     let status = true;
     let isBreak = false;
     names.value = names.value.replace(/ +(?= )/g, '').trim();
+    names.value = names.value.replace(/\t/g, ' ').trim();
     names.value = names.value.split('\n').map(line => {
         line = line.trim();
         const copyLine = line;
