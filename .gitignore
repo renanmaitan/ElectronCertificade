@@ -1,6 +1,5 @@
 /node_modules/
 /templates/
 /output/
-converter.exe
 /dist/
-converter.exe
+/libreoffice/

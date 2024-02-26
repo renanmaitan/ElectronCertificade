@@ -17,6 +17,7 @@ let mainWindow = null;
 let optionsWindow = null;
 let listWindow = null;
 const progressWindows = {};
+let editItemWindow = null;
 
 function ensureDirectoryExists(directory) {
     if (!fs.existsSync(directory)) {
@@ -25,6 +26,10 @@ function ensureDirectoryExists(directory) {
 }
 
 async function createProgressWindow(operationType) {
+    if (progressWindows[operationType] && !progressWindows[operationType].isDestroyed()) {
+        progressWindows[operationType].focus();
+        return;
+    }
     progressWindows[operationType] = new BrowserWindow({
         width: 350,
         height: 150,
@@ -45,7 +50,7 @@ async function createProgressWindow(operationType) {
 }
 
 async function createEditItemWindow(item) {
-    const editItemWindow = new BrowserWindow({
+    editItemWindow = new BrowserWindow({
         width: 400,
         height: 400,
         show: false,
@@ -140,6 +145,24 @@ async function createWindow() {
     await mainWindow.loadFile('src/pages/home/index.html');
     ensureDirectorys();
     mainWindow.webContents.send('withTelAndEmail', getWithTelAndEmail());
+
+    mainWindow.on('closed', () => {
+        mainWindow = null;
+        if (optionsWindow && !optionsWindow.isDestroyed()) {
+            optionsWindow.close();
+        }
+        if (listWindow && !listWindow.isDestroyed()) {
+            listWindow.close();
+        }
+        if (editItemWindow && !editItemWindow.isDestroyed()) {
+            editItemWindow.close();
+        }
+        Object.values(progressWindows).forEach(window => {
+            if (window && !window.isDestroyed()) {
+                window.destroy();
+            }
+        });
+    });
 
     ipcMain.on('wordTemplate', (event, message) => {
         rewriteFile(message, 'wordTemplate', event);
@@ -297,7 +320,7 @@ async function createWindow() {
                 progressWindows['word'].close();
                 break;
             }
-            const pdfPath = `/output/pdfOutputs/fromWord/${handledFileName}.pdf`;
+            const pdfPath = `/output/pdfOutputs/fromWord`;
             await convertToPdf(docxPath, pdfPath, 'docx', progressWindows['word'], list.length, i + 1);
         }
     });
@@ -330,7 +353,7 @@ async function createWindow() {
                 progressWindows['powerpoint'].close();
                 break;
             }
-            const pdfPath = `/output/pdfOutputs/fromPptx/${handledFileName}.pdf`;
+            const pdfPath = `/output/pdfOutputs/fromPptx`;
             await convertToPdf(pptxPath, pdfPath, 'pptx', progressWindows['powerpoint'], list.length, i + 1);
         }
     });

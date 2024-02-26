@@ -26,8 +26,8 @@ function executeCommand(command) {
 async function convertToPdf(inputFile, outputFile, type, progressWindow, length, count) {
     inputFile = path.join(appDocsFolder, inputFile);
     outputFile = path.join(appDocsFolder, outputFile);
-    const converterPath = path.join(appPath, '..', 'converter.exe');
-    const command = `"${converterPath}" "${inputFile}" "${outputFile}" "${type}"`;
+    const libreofficePath = path.join(appPath, '..', 'libreoffice', 'program', 'soffice.exe');
+    const command = `${libreofficePath} --headless --convert-to pdf --outdir "${outputFile}" "${inputFile}"`;
     try {
         await executeCommand(command);
         progressWindow.webContents.send('progress', count / length * 100);
